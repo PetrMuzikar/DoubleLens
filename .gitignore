@@ -1,3 +1,8 @@
 /bin
 /obj
 /data
+/FindDomains/*.cbp
+/FindDomains/*.depend
+/FindDomains/*.layout
+/FindDomains/bin
+/FindDomains/obj
