@@ -9,27 +9,46 @@ then
     exit 1
 fi
 
-FIND_DOMAINS=${FIND_DOMAINS:-FindDomains}
-if [ ! -x "$FIND_DOMAINS" ]
+DOUBLE_LENS_FIND_DOMAINS="$(which ${DOUBLE_LENS_FIND_DOMAINS:-FindDomains})"
+if [ ! -x "$DOUBLE_LENS_FIND_DOMAINS" ]
 then
-    echo "The program $FIND_DOMAINS is not executable. Please set the correct path."
+    echo "The program $DOUBLE_LENS_FIND_DOMAINS is not executable. Please set the correct path."
     exit 1
 fi
 
-DOUBLE_LENS_EXEC=${DOUBLE_LENS_EXEC:-DoubleLens}
+DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLens})"
 if [ ! -x "$DOUBLE_LENS_EXEC" ]
 then
     echo "The program $DOUBLE_LENS_EXEC is not executable. Please set the correct path."
     exit 1
 fi
 
-DOMAINS=${DOMAINS:-domains.awk}
-if [ ! -x "$DOMAINS" ]
+DOUBLE_LENS_DOMAINS="$(which ${DOUBLE_LENS_DOMAINS:-domains.awk})"
+if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
 then
-    echo "The script $DOMAINS is not executable. Please set the correct path."
+    echo "The script $DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
     exit 1
 fi
     
+# SOBOL_DIMS == 40 !!!
+
+case "$1" in
+    -l|--local)
+    SELECT=1
+    kMax=4
+    shift
+    ;;
+    -c|--cluster)
+    SELECT=2
+    kMax=20
+    shift
+    ;;
+    *)
+    SELECT=2
+    kMax=20
+    ;;
+esac
+
 for d in "$@"
 do
     outFileBaseName="${d/%-in/}"
@@ -109,12 +128,12 @@ do
     ${DOUBLE_LENS_EXEC} i ${testFile} ${dataFile} || exit 1
     
     echo "Separating images into groups..." 
-    cat ${testFile} | awk '/^#/{next;} {print $3, $4;}' | ${FIND_DOMAINS} $radius $tol > "$testImagesFile"
+    cat ${testFile} | awk '/^#/{next;} {print $3, $4;}' | ${DOUBLE_LENS_FIND_DOMAINS} $radius $tol > "$testImagesFile"
     
     echo "Preparing input files..."
     rm -vf "${outFileBaseName}"-+([[:digit:]])\.dat
-    S=$(${DOMAINS} ${testImagesFile})
-    ${DOMAINS} -v "Sread=$S" -v "n=$rays" -v "nMax=$raysGroup" "$testImagesFile" > "$domainsFile" 
+    S=$(${DOUBLE_LENS_DOMAINS} ${testImagesFile})
+    ${DOUBLE_LENS_DOMAINS} -v "Sread=$S" -v "n=$rays" -v "nMax=$raysGroup" "$testImagesFile" > "$domainsFile" 
     raysReal=$(awk '/^$|^#/{next;} {n += $NF;} END{print n;}' "$domainsFile")
     echo "# Ssum= ${S}" >> "$testImagesFile"
     echo "# rays= ${raysReal}" >> "$testImagesFile"
@@ -125,8 +144,6 @@ do
     fi
     
     k=0
-    # SOBOL_DIMS == 40 !!!
-    kMax=20
     while read -r line || [[ -n "$line" ]]
     do
         if [ $k -ge $kMax ]
@@ -134,7 +151,7 @@ do
             echo "Maximum of $kMax input files reached!"
 	    echo "Please increase the value of raysGroup."
 	    echo "raysGroup = ${raysGroup}"
-            exit 3
+            exit 1
         fi
         out="${outFileBaseName}-$k.dat"
         echo "$out"
