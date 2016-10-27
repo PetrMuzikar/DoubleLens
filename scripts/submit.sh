@@ -48,6 +48,12 @@ case "$1" in
     ;;
 esac
 
+if [[ $SELECT == 2 && ! -x qsub ]]
+then
+    echo "Could not find qsub! Use -l while executing this script to run it locally without a grid engine."
+    exit 1
+fi
+
 for d in "$@"
 do
 
@@ -130,7 +136,12 @@ do
     done
 done
 
-if [ "$SELECT" -eq "2" ]
-then
-    qstat -f
-fi
+case "$SELECT" in
+    1) # local
+        #ps -u $USER | grep "$(basename ${executable})"
+        ;;
+    2) # cluster
+        qstat -f
+        ;;
+esac
+
