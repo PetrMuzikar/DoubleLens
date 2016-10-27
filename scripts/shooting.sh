@@ -51,7 +51,26 @@ fi
 
 export LIBRARY_PATH=$LD_LIBRARY_PATH
 
-DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh)"
+if [ ! -z "$SGE_O_PATH" ]
+then
+    if [ -z "$PATH" ]
+    then
+        PATH="$SGE_O_PATH"
+    else
+        PATH="${SGE_O_PATH}:$PATH"
+    fi
+fi
+
+DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
+echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
+echo "$PATH"
+echo "$(env)"
+
+if [ ! -x "$DOUBLE_LENS_JOB" ]
+then
+    echo "$DOUBLE_LENS_JOB is not executable!"
+    exit 1 
+fi
 
 # HERE COMES THE ACTUAL CALCULATION - CALL OF THE MAIN BINARY ETC.:
 inFiles=(*-+([[:digit:]])\.dat)
@@ -64,14 +83,17 @@ rm -f shooting.sh.*
 if [ "$ex" -eq 0 ]
 then
     rm -f err.dat
+else
+    echo "Error while running $DOUBLE_LENS_JOB!"
+    exit "$ex"
 fi
 
 # COPY THE RESULTS BACK TO THE SUBMIT DIR IN $HOME
 mkdir -p $SbmtDir/$JOB_ID
 cd $CurrDir
 cp -r * $SbmtDir/$JOB_ID/. && rm -rf *
-cd $SbmtDir
-rm -f shooting.sh.*
+#cd $SbmtDir
+#rm -f shooting.sh.*
 
 # CLEAN THE SCRATCH
 rmdir $SCRATCH && echo "scratch cleaned"
