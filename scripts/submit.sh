@@ -102,7 +102,7 @@ do
         exit 1
     fi
     
-    rm -rf "${DOUBLE_LENS_WORK_DIR}/${outFileBaseName}"-+([[:digit:]])
+    rm -rvf "${DOUBLE_LENS_WORK_DIR}/${outFileBaseName}"-+([[:digit:]])
 
     k=0
     for f in "${outFileBaseName}"-+([[:digit:]])\.dat
@@ -111,15 +111,18 @@ do
         echo "$dirName"
         mkdir "$dirName"
         outFile="${f/%.dat/-out.dat}"
+        #errFile="${f/%.dat/-err.dat}"
         cp "$f" "${dirName}"
         pushd "$dirName"
         case "$SELECT" in
             1) # local
-                nohub "${executable}" s "${outFile}" "$f" &
+                #nohup "${executable}" s "${outFile}" "$f" "${errFile}" &
+                nohup "${executable}" s "${outFile}" "$f" &
                 ;;
             2) # cluster
-                #cp "$DOUBLE_LENS_SCRIPT_DIR/shooting.sh" .
-	        qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" "${DOUBLE_LENS_SHOOTING}"
+                #cp "$DOUBLE_LENS_SHOOTING" .
+                qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" "${DOUBLE_LENS_SHOOTING}"
+                #qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" "shooting.sh"
                 ;;
         esac
         popd
