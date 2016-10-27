@@ -48,7 +48,7 @@ case "$1" in
     ;;
 esac
 
-if [[ $SELECT == 2 && ! -x qsub ]]
+if [[ $SELECT == 2 && ! -x "$(which qsub)" ]]
 then
     echo "Could not find qsub! Use -l while executing this script to run it locally without a grid engine."
     exit 1
