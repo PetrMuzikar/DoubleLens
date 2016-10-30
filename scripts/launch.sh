@@ -20,9 +20,12 @@ fi
 
 case "$1" in
     -l|--local|-c|--cluster)
-        c="$1"
-        shift
-        ;;
+    c="$1"
+    shift
+    ;;
+    *)
+    c=""
+    ;;
 esac
 
 echo "$@"
@@ -30,5 +33,10 @@ echo "$@"
 for d in "$@"
 do
     echo "Starting computations: ${d}."
-    "${DOUBLE_LENS_SETUP}" "$c" "$d" && "$DOUBLE_LENS_SUBMIT" "$c" "$d" && echo "Computing..."
+    if [ "$c" != "" ]
+    then
+        "${DOUBLE_LENS_SETUP}" "$c" "$d" && "$DOUBLE_LENS_SUBMIT" "$c" "$d" && echo "Computing..."
+    else
+        "${DOUBLE_LENS_SETUP}" "$d" && "$DOUBLE_LENS_SUBMIT" "$d" && echo "Computing..."
+    fi
 done
