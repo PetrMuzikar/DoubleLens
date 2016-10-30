@@ -41,7 +41,11 @@ public:
 
     SourcePlaneGrid& operator=(const SourcePlaneGrid& rhs);
 
-    PointInt whichPixel(PointNum X) const;
+    PointInt whichPixel(PointNum X) const 
+    {
+        PointNum temp = (X - minGrid_) / diffGrid_;
+        return floor(temp);
+    }
 
     bool add(PointNum X);
     void add(const SourcePlaneGrid& spg);

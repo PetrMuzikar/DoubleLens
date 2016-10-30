@@ -140,16 +140,9 @@ void SourcePlaneGrid::init()
 #endif
 }
 
-PointInt SourcePlaneGrid::whichPixel(PointNum X) const
-{
-    PointNum temp = (X - minGrid_) / diffGrid_;
-    return floor(temp);
-}
-
 bool SourcePlaneGrid::add(PointNum X)
 {
-    PointNum temp = (X - minGrid_) / diffGrid_;
-    PointInt which = floor(temp);
+    PointInt which = whichPixel(X);
     if ((which >= PointInt(0, 0)) && (which < nGrid_))
     {
         pixels_(which.x(), which.y())++;
