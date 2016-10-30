@@ -49,7 +49,7 @@ fi
 
 recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
 
-DOUBLE_LENS_PLOT="$(which ${DOUBLE_LENS_PLOT:-plot.plt})"
+DOUBLE_LENS_PLOT="$(which ${DOUBLE_LENS_PLOT:-maps.plt})"
 if [ ! -r "$DOUBLE_LENS_PLOT" ]
 then
     echo "The gnuplot script DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT is not readable. Please set the correct path."
@@ -216,5 +216,5 @@ do
     fi
     
     echo "Removing files..."
-    rm -vf "${inWorkFile}"
+    rm -vf "${inWorkFile}" "${files[@]}"
 done 
