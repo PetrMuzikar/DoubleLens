@@ -1,6 +1,10 @@
 /bin
 /obj
 /data
+/data_zoo
+/data_cluster
+/data_asus
+/data_fujitsu
 /FindDomains/*.cbp
 /FindDomains/*.depend
 /FindDomains/*.layout
