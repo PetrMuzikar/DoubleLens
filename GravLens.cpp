@@ -238,8 +238,8 @@ void GravLens::integrate()
 #ifdef DEBUG_INTEGRATE
     Num x, y, z, vx, vy, vz, xL, yL, zL, c1, c2, r, r3, phix, phiy, phiz;
     const Num MG[] = {M1_G_, M2_G_};
-    Int wid = 13;
-    std::cerr.precision(4);
+    Int wid = 18;
+    std::cerr.precision(10);
     std::cerr << "# Debug info =============================================\n";
     std::cerr << "# tMax = " << tMax << std::endl;
     std::cerr << std::scientific;
