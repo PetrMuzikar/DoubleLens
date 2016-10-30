@@ -3,14 +3,29 @@
 shopt -s nullglob
 shopt -s extglob
 
+if [ "$#" -eq "0" ]
+then
+    echo "Please specify a name."
+    exit 1
+fi
+
+DOUBLE_LENS_WORK_DIR="${DOUBLE_LENS_WORK_DIR:-${HOME}/Submit}"
+if [ ! -d "$DOUBLE_LENS_WORK_DIR" ]
+then
+    echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}\nPlease set a working directory."
+    exit 1
+else
+   echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
+fi
+
 for outFileBaseName in "$@"
 do
-    outDir="${HOME}/Submit/outFiles/${outFileBaseName}-out"
-    inDir="${HOME}/Submit/outFiles/${outFileBaseName}-in"
+    outDir="${DOUBLE_LENS_WORK_DIR}/outFiles/${outFileBaseName}-out"
+    inDir="${DOUBLE_LENS_WORK_DIR}/inFiles/${outFileBaseName}-in"
     
     if [ -d "$outDir" ]
     then
-    rm -rf "$outDir"
+        rm -rvf "$outDir"
     fi
     mkdir "$outDir"
     
