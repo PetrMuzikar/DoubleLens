@@ -108,7 +108,7 @@ do
         exit 1
     fi
     
-    rm -rvf "${DOUBLE_LENS_WORK_DIR}/${outFileBaseName}"-+([[:digit:]])
+    rm -rf "${DOUBLE_LENS_WORK_DIR}/${outFileBaseName}"-+([[:digit:]])
 
     k=0
     for f in "${outFileBaseName}"-+([[:digit:]])\.dat
