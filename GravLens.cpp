@@ -15,7 +15,7 @@
 #include "IntegrationException.hpp"
 
 //#define DEBUG_LENS_EQ
-//#define DEBUG_INTEGRATE
+#define DEBUG_INTEGRATE
 //#define PRINT_ROOTS
 
 #define X2M2
