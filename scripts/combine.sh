@@ -20,8 +20,9 @@ else
    echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 fi
 
-DOUBLE_LENS_DOMAINS="$(which ${DOUBLE_LENS_DOMAINS:-domains.awk})"
-if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
+#DOUBLE_LENS_DOMAINS="$(which ${DOUBLE_LENS_DOMAINS:-domains.awk})"
+DOUBLE_LENS_DOMAINS="${DOUBLE_LENS_DOMAINS:-domains.awk}"
+if [ ! -x "$(which $DOUBLE_LENS_DOMAINS)" ]
 then
     echo "The script DOUBLE_LENS_DOMAINS='$DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
     exit 1
@@ -29,8 +30,9 @@ else
     echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
 fi
 
-DOUBLE_LENS_DRAW_DOMAINS="$(which ${DOUBLE_LENS_DRAW_DOMAINS:-drawDomains.awk})"
-if [ ! -x "$DOUBLE_LENS_DRAW_DOMAINS" ]
+#DOUBLE_LENS_DRAW_DOMAINS="$(which ${DOUBLE_LENS_DRAW_DOMAINS:-drawDomains.awk})"
+DOUBLE_LENS_DRAW_DOMAINS="${DOUBLE_LENS_DRAW_DOMAINS:-drawDomains.awk}"
+if [ ! -x "$(which $DOUBLE_LENS_DRAW_DOMAINS)" ]
 then
     echo "The script DOUBLE_LENS_DRAW_DOMAINS='$DOUBLE_LENS_DRAW_DOMAINS is not executable. Please set the correct path."
     exit 1
@@ -38,8 +40,9 @@ else
     echo "DOUBLE_LENS_DRAW_DOMAINS=$DOUBLE_LENS_DRAW_DOMAINS"
 fi
 
-DOUBLE_LENS_INPUT="$(which ${DOUBLE_LENS_INPUT:-input.awk})"
-if [ ! -x "$DOUBLE_LENS_INPUT" ]
+#DOUBLE_LENS_INPUT="$(which ${DOUBLE_LENS_INPUT:-input.awk})"
+DOUBLE_LENS_INPUT="${DOUBLE_LENS_INPUT:-input.awk}"
+if [ ! -x "$(which $DOUBLE_LENS_INPUT)" ]
 then
     echo "The script DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT is not executable. Please set the correct path."
     exit 1
@@ -49,8 +52,9 @@ fi
 
 recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
 
-DOUBLE_LENS_PLOT="$(which ${DOUBLE_LENS_PLOT:-maps.plt})"
-if [ ! -r "$DOUBLE_LENS_PLOT" ]
+#DOUBLE_LENS_PLOT="$(which ${DOUBLE_LENS_PLOT:-maps.plt})"
+DOUBLE_LENS_PLOT="${DOUBLE_LENS_PLOT:-maps.plt}"
+if [ ! -r "$(which $DOUBLE_LENS_PLOT)" ]
 then
     echo "The gnuplot script DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT is not readable. Please set the correct path."
     exit 1
@@ -68,7 +72,7 @@ fi
 #drawDom="drawDomains.awk"
 #inp="input.awk"
 
-for d in $@
+for d in "$@"
 do
     outFileBaseName="${d/%-out/}"
     
@@ -196,8 +200,9 @@ do
     #then
     #    cat "$plotConfFile" > "$plotFile"
     #fi
-    echo -n "call \"${DOUBLE_LENS_PLOT}\" \"$(basename ${d}/${outFileBaseName}-out)\" " >> $plotFile
-    head "${outFile}" | grep "##" | "${DOUBLE_LENS_INPUT}" -v "todo=0" -v "random=${random}" >> $plotFile
+    echo -n "maps = system(\"which ${DOUBLE_LENS_PLOT}\")" >> "$plotFile"
+    echo -n "call maps \"$(basename ${d}/${outFileBaseName}-out)\" " >> "$plotFile"
+    head "${outFile}" | grep "##" | "${DOUBLE_LENS_INPUT}" -v "todo=0" -v "random=${random}" >> "$plotFile"
     echo "File ${plotFile}:"
     cat $plotFile
 

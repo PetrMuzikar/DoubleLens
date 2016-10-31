@@ -424,7 +424,8 @@ set cbtics scale default autofreq
 
 if ((rel == 1) && (sub == 0) && (div == 0)) {
     set macro
-    call "../compare.plt" "@basename"
+    comp = system("which compare.plt")
+    call comp "@basename"
 }
 
 unset output
