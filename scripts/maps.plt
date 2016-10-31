@@ -255,10 +255,12 @@ if (cont == 0 || cont == 2) {
     replot
 }
 
+contourTics = system("which contourTics.sh")
+
 set term wxt
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
-    load "<../contourTics.sh " . tabname 
+    load "< " . contourTics . " " . tabname 
     if (sub != 1 && div == 1) {
         set title "Double lens: magnification for " . addtit . " / mag. of
 a single lens"
@@ -326,7 +328,7 @@ set term wxt
 set term wxt
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
-    load "<../contourTics.sh " . tab2name 
+    load "< " . contourTics . " " . tab2name 
     #sp dataname u ($$3-cm):4:7 with pm3d, \
     #    tab2name w d nosurface lt 1 lc rgb "black" notitle
     if (sub != 1 && div == 1) {
@@ -388,7 +390,7 @@ if (cont == 0 || cont == 2) {
 set term wxt
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
-    load "<../contourTics.sh " . tab3name 
+    load "< " . contourTics . " " . tab3name
     #sp dataname u ($$3-cm):4:8 with pm3d, \
     #    tab2name w d nosurface lt 1 lc rgb "black" notitle
     if (sub != 1 && div == 1) {
