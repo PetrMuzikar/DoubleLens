@@ -200,7 +200,7 @@ do
     #then
     #    cat "$plotConfFile" > "$plotFile"
     #fi
-    echo -n "maps = system(\"which ${DOUBLE_LENS_PLOT}\")" >> "$plotFile"
+    echo "maps = system(\"which ${DOUBLE_LENS_PLOT}\")" >> "$plotFile"
     echo -n "call maps \"$(basename ${d}/${outFileBaseName}-out)\" " >> "$plotFile"
     head "${outFile}" | grep "##" | "${DOUBLE_LENS_INPUT}" -v "todo=0" -v "random=${random}" >> "$plotFile"
     echo "File ${plotFile}:"
@@ -221,5 +221,6 @@ do
     fi
     
     echo "Removing files..."
-    rm -vf "${inWorkFile}" "${files[@]}"
+    rm -vf "${inWorkFile}"
+    #rm -vf "${files[@]}"
 done 
