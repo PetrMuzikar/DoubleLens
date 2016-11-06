@@ -5,8 +5,10 @@ reset
 cut = 1
 drawEps = 1
 
-call "../nolap.plt" "$0"
+nolap = system("which nolap.plt")
+call nolap "$0"
 
-call "../lap.plt" "$0"
+lap = system("which lap.plt")
+call lap "$0"
 
 reset
