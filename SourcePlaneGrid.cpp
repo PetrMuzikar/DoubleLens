@@ -274,7 +274,6 @@ void SourcePlaneGrid::computeLaplaceCorrection()
 void SourcePlaneGrid::printHeader(std::ostream& os) const
 {
     Int w = 30;
-    std::stringstream ss;
 
     os << prefix_ << "SourcePlaneGrid:\n";
 
@@ -295,13 +294,16 @@ void SourcePlaneGrid::printHeader(std::ostream& os) const
 
     if (!rtpc_.empty())
     {
-        os << prefix_ << "p    Watching rays coming into pixels:\n";
-        os << prefix_ << "p" << std::setw(w-1) << "indexes";
+        std::stringstream ss(prefix_);
+        std::string p;
+        ss >> p; // Eliminating whitespace at the end.
+        os << p << "p    Watching rays coming into pixels:\n";
+        os << p << "p" << std::setw(w-1) << "indexes";
         os << std::setw(w) << "coordinates" << std::endl;
 
         for (RaysToPixelCollection::const_iterator it = rtpc_.begin(); it != rtpc_.end(); it++)
         {
-            os << prefix_ << "p" << std::setw(w-1) << std::string(it->pixel_);
+            os << p << "p" << std::setw(w-1) << std::string(it->pixel_);
             os << std::setw(w) << std::string(it->coords_) << std::endl;
         }
     }
