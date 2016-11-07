@@ -2,6 +2,8 @@
 
 reset
 
+show loadpath
+
 zmax = 0
 logz = 1
 cont = 0
@@ -426,8 +428,8 @@ set cbtics scale default autofreq
 
 if ((rel == 1) && (sub == 0) && (div == 0)) {
     set macro
-    comp = system("which compare.plt")
-    call comp "@basename"
+    #comp = system("which compare.plt")
+    call "compare.plt" "@basename"
 }
 
 unset output
