@@ -1,21 +1,19 @@
 #!/bin/bash
 
-DOUBLE_LENS_SETUP="$(which ${DOUBLE_LENS_SETUP:-setup.sh})"
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+
+DOUBLE_LENS_SETUP="$DOUBLE_LENS_SCRIPTS/setup.sh"
+echo "DOUBLE_LENS_SETUP=$DOUBLE_LENS_SETUP"
 if [ ! -x "$DOUBLE_LENS_SETUP" ]
 then
-    "$DOUBLE_LENS_SETUP is not executable!"
-    exit 1
-else
-    echo "DOUBLE_LENS_SETUP=$DOUBLE_LENS_SETUP"
+    echo "DOUBLE_LENS_SETUP=${DOUBLE_LENS_SETUP}\nPlease set the correct path to the script shooting.sh."
 fi
 
-DOUBLE_LENS_SUBMIT="$(which ${DOUBLE_LENS_SUBMIT:-submit.sh})"
+DOUBLE_LENS_SUBMIT="$DOUBLE_LENS_SCRIPTS/submit.sh"
+echo "DOUBLE_LENS_SUBMIT=$DOUBLE_LENS_SUBMIT"
 if [ ! -x "$DOUBLE_LENS_SUBMIT" ]
 then
-    "$DOUBLE_LENS_SUBMIT is not executable!"
-    exit 1
-else
-    echo "DOUBLE_LENS_SUBMIT=$DOUBLE_LENS_SUBMIT"
+    echo "DOUBLE_LENS_SUBMIT=${DOUBLE_LENS_SUBMIT}\nPlease set the correct path to the script shooting.sh."
 fi
 
 case "$1" in
