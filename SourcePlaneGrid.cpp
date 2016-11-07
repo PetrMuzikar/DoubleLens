@@ -295,13 +295,13 @@ void SourcePlaneGrid::printHeader(std::ostream& os) const
 
     if (!rtpc_.empty())
     {
-        os << prefix_ << "    Watching rays coming into pixels:\n";
-        os << prefix_ << std::setw(w) << "indexes";
+        os << prefix_ << "p    Watching rays coming into pixels:\n";
+        os << prefix_ << "p" << std::setw(w-1) << "indexes";
         os << std::setw(w) << "coordinates" << std::endl;
 
         for (RaysToPixelCollection::const_iterator it = rtpc_.begin(); it != rtpc_.end(); it++)
         {
-            os << prefix_ << std::setw(w) << std::string(it->pixel_);
+            os << prefix_ << "p" << std::setw(w-1) << std::string(it->pixel_);
             os << std::setw(w) << std::string(it->coords_) << std::endl;
         }
     }
