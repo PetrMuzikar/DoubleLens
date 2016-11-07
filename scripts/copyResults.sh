@@ -10,12 +10,11 @@ then
 fi
 
 DOUBLE_LENS_WORK_DIR="${DOUBLE_LENS_WORK_DIR:-${HOME}/Submit}"
+echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 if [ ! -d "$DOUBLE_LENS_WORK_DIR" ]
 then
     echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}\nPlease set a working directory."
     exit 1
-else
-   echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 fi
 
 for outFileBaseName in "$@"

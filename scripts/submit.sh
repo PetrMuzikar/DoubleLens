@@ -9,29 +9,28 @@ then
     exit 1
 fi
 
+echo "DOUBLE_LENS=$DOUBLE_LENS"
 if [ ! -d "$DOUBLE_LENS" ]
 then
     echo "DOUBLE_LENS=${DOUBLE_LENS}\nPlease set the main project directory."
     exit 1
-else
-   echo "DOUBLE_LENS=$DOUBLE_LENS"
 fi
 
 DOUBLE_LENS_WORK_DIR="${DOUBLE_LENS_WORK_DIR:-${HOME}/Submit}"
+echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 if [ ! -d "$DOUBLE_LENS_WORK_DIR" ]
 then
     echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}\nPlease set a working directory."
     exit 1
-else
-   echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 fi
 
-DOUBLE_LENS_SHOOTING="$(which ${DOUBLE_LENS_SHOOTING:-shooting.sh})"
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+
+DOUBLE_LENS_SHOOTING="$DOUBLE_LENS_SCRIPTS/shooting.sh"
+echo "DOUBLE_LENS_SHOOTING=$DOUBLE_LENS_SHOOTING"
 if [ ! -x "$DOUBLE_LENS_SHOOTING" ]
 then
     echo "DOUBLE_LENS_SHOOTING=${DOUBLE_LENS_SHOOTING}\nPlease set the correct path to the script shooting.sh."
-else
-    echo "DOUBLE_LENS_SHOOTING=${DOUBLE_LENS_SHOOTING}"
 fi
 
 case "$1" in
