@@ -214,8 +214,8 @@ do
     if [ "${pixels}" != "" ]
     then
         echo "unset key" > "$pixelsPlotFile"
-        "${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
-        echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsFile" >> "$pixelsPlotFile"
+        #"${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
+        echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
     fi
