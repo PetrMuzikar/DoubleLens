@@ -197,5 +197,5 @@ do
     
     echo "Removing files..."
     rm -vf "${inWorkFile}"
-    #rm -vf "${files[@]}"
+    rm -vf "${files[@]}"
 done 
