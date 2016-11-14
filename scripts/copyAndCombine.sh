@@ -17,6 +17,16 @@ then
     exit 1
 fi
 
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+
+DOUBLE_LENS_COMBINE="$DOUBLE_LENS_SCRIPTS/combine.sh"
+echo "DOUBLE_LENS_COMBINE=$DOUBLE_LENS_COMBINE"
+if [ ! -x "$DOUBLE_LENS_COMBINE" ]
+then
+    echo "The script $DOUBLE_LENS_COMBINE is not executable. Please set the correct path."
+    exit 1
+fi
+
 for outFileBaseName in "$@"
 do
     outDir="${DOUBLE_LENS_WORK_DIR}/outFiles/${outFileBaseName}-out"
@@ -41,4 +51,9 @@ do
     	    exit 1
     	fi
     done
+
+    pushd "${DOUBLE_LENS_WORK_DIR}/outFiles"
+    "$DOUBLE_LENS_COMBINE" "${outFileBaseName}-out"
+    popd
 done
+

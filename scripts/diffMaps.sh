@@ -2,6 +2,25 @@
 
 shopt -s extglob
 
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+echo "GNUPLOT_LIB=$GNUPLOT_LIB"
+
+DOUBLE_LENS_DOMAINS="$DOUBLE_LENS_SCRIPTS/domains.awk}"
+echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
+if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
+then
+    echo "The script $DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
+    exit 1
+fi
+
+DOUBLE_LENS_DIFF_MAPS_PLOT="$DOUBLE_LENS_SCRIPTS/diffMaps.plt"
+echo "DOUBLE_LENS_DIFF_MAPS_PLOT=$DOUBLE_LENS_DIFF_MAPS_PLOT"
+if [ ! -r "$DOUBLE_LENS_DIFF_MAPS_PLOT" ]
+then
+    echo "The script $DOUBLE_LENS_DIFF_MAPS_PLOT is not readable. Please set the correct path."
+    exit 1
+fi
+
 fCompare1="$1"
 fCompare2="$2"
 #fOutBaseName="$3"
@@ -29,7 +48,6 @@ fPlot="${fOut/%.dat/-plot.plt}"
 #fConf="${fOut/%.dat/-conf.sh}"
 fCompare1Conf="${fCompare1/%out.dat/conf.sh}"
 fPlotConf="${fOut/%.dat/-conf.plt}"
-diffMaps="diffMaps.plt"
 
 if [ -r "$fPlotConf" ]
 then
@@ -86,8 +104,9 @@ paste "$fTemp1" "$fTemp2" | awk '/^[\s\t]*$/{printf("\n"); next;} {print}' >> "$
 echo "Creating gnuplot file and executing it..."
 echo "diffConf = ${diffConf}" > "$fPlot"
 echo "diffConfFile = \"${diffConfFile}\"" >> "$fPlot"
-echo -n "call \"./${diffMaps}\" \"${fOutBaseName}\" " >> "$fPlot"
-head "${fCompare1}" | grep "##" | ./input.awk -v "todo=0" -v "random=${random}" >> "$fPlot"
+#echo "diffMaps = system(\"which $DOUBLE_LENS_DIFF_MAPS_PLOT\")" >> "$fPlot"
+echo -n "call \"$(basename $DOUBLE_LENS_DIFF_MAPS_PLOT)\" \"${fOutBaseName}\" " >> "$fPlot"
+head "${fCompare1}" | grep "##" | "$DOUBLE_LENS_INPUT" -v "todo=0" -v "random=${random}" >> "$fPlot"
 cat "$fPlot"
 gnuplot "$fPlot"
 

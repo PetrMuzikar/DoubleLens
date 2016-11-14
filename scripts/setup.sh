@@ -10,6 +10,7 @@ then
 fi
 
 DOUBLE_LENS_FIND_DOMAINS="$(which ${DOUBLE_LENS_FIND_DOMAINS:-FindDomains})"
+echo "DOUBLE_LENS_FIND_DOMAINS=$DOUBLE_LENS_FIND_DOMAINS"
 if [ ! -x "$DOUBLE_LENS_FIND_DOMAINS" ]
 then
     echo "The program $DOUBLE_LENS_FIND_DOMAINS is not executable. Please set the correct path."
@@ -17,19 +18,23 @@ then
 fi
 
 DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLens})"
+echo "DOUBLE_LENS_EXEC=$DOUBLE_LENS_EXEC"
 if [ ! -x "$DOUBLE_LENS_EXEC" ]
 then
     echo "The program $DOUBLE_LENS_EXEC is not executable. Please set the correct path."
     exit 1
 fi
 
-DOUBLE_LENS_DOMAINS="$(which ${DOUBLE_LENS_DOMAINS:-domains.awk})"
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+
+DOUBLE_LENS_DOMAINS="$DOUBLE_LENS_SCRIPTS/domains.awk"
+echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
 if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
 then
     echo "The script $DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
     exit 1
 fi
-    
+
 # SOBOL_DIMS == 40 !!!
 
 case "$1" in

@@ -3,74 +3,57 @@
 shopt -s nullglob
 shopt -s extglob
 
+echo "DOUBLE_LENS=$DOUBLE_LENS"
 if [ ! -d "$DOUBLE_LENS" ]
 then
     echo "DOUBLE_LENS=${DOUBLE_LENS}\nPlease set the main project directory."
     exit 1
-else
-   echo "DOUBLE_LENS=$DOUBLE_LENS"
 fi
 
 DOUBLE_LENS_WORK_DIR="${DOUBLE_LENS_WORK_DIR:-${HOME}/Submit}"
+echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 if [ ! -d "$DOUBLE_LENS_WORK_DIR" ]
 then
     echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}\nPlease set a working directory."
     exit 1
-else
-   echo "DOUBLE_LENS_WORK_DIR=${DOUBLE_LENS_WORK_DIR}"
 fi
 
-#DOUBLE_LENS_DOMAINS="$(which ${DOUBLE_LENS_DOMAINS:-domains.awk})"
-DOUBLE_LENS_DOMAINS="${DOUBLE_LENS_DOMAINS:-domains.awk}"
-if [ ! -x "$(which $DOUBLE_LENS_DOMAINS)" ]
+echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
+echo "GNUPLOT_LIB=$GNUPLOT_LIB"
+
+DOUBLE_LENS_DOMAINS="$DOUBLE_LENS_SCRIPTS/domains.awk"
+echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
+if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
 then
-    echo "The script DOUBLE_LENS_DOMAINS='$DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
+    echo "The script $DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
     exit 1
-else
-    echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
 fi
 
-#DOUBLE_LENS_DRAW_DOMAINS="$(which ${DOUBLE_LENS_DRAW_DOMAINS:-drawDomains.awk})"
-DOUBLE_LENS_DRAW_DOMAINS="${DOUBLE_LENS_DRAW_DOMAINS:-drawDomains.awk}"
-if [ ! -x "$(which $DOUBLE_LENS_DRAW_DOMAINS)" ]
+DOUBLE_LENS_DRAW_DOMAINS="$DOUBLE_LENS_SCRIPTS/drawDomains.awk"
+echo "DOUBLE_LENS_DRAW_DOMAINS=$DOUBLE_LENS_DRAW_DOMAINS"
+if [ ! -x "$DOUBLE_LENS_DRAW_DOMAINS" ]
 then
-    echo "The script DOUBLE_LENS_DRAW_DOMAINS='$DOUBLE_LENS_DRAW_DOMAINS is not executable. Please set the correct path."
+    echo "The script $DOUBLE_LENS_DRAW_DOMAINS is not executable. Please set the correct path."
     exit 1
-else
-    echo "DOUBLE_LENS_DRAW_DOMAINS=$DOUBLE_LENS_DRAW_DOMAINS"
 fi
 
-#DOUBLE_LENS_INPUT="$(which ${DOUBLE_LENS_INPUT:-input.awk})"
-DOUBLE_LENS_INPUT="${DOUBLE_LENS_INPUT:-input.awk}"
-if [ ! -x "$(which $DOUBLE_LENS_INPUT)" ]
+DOUBLE_LENS_INPUT="$DOUBLE_LENS_SCRIPTS/input.awk"
+echo "DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT"
+if [ ! -x "$DOUBLE_LENS_INPUT" ]
 then
-    echo "The script DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT is not executable. Please set the correct path."
+    echo "The script $DOUBLE_LENS_INPUT is not executable. Please set the correct path."
     exit 1
-else
-    echo "DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT"
 fi
 
-recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
-
-#DOUBLE_LENS_PLOT="$(which ${DOUBLE_LENS_PLOT:-maps.plt})"
-DOUBLE_LENS_PLOT="${DOUBLE_LENS_PLOT:-maps.plt}"
-if [ ! -r "$(which $DOUBLE_LENS_PLOT)" ]
+DOUBLE_LENS_PLOT="${DOUBLE_LENS_SCRIPTS}/maps.plt"
+echo "DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT"
+if [ ! -r "$DOUBLE_LENS_PLOT" ]
 then
     echo "The gnuplot script DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT is not readable. Please set the correct path."
     exit 1
-else
-    echo "DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT"
 fi
 
-#DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLens})"
-#if [ ! -x "$DOUBLE_LENS_EXEC" ]
-#then
-#    echo "The program $DOUBLE_LENS_EXEC is not executable. Please set the correct path."
-#    exit 1
-#fi
-
-#drawDom="drawDomains.awk"
-#inp="input.awk"
+recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
 
 for d in "$@"
 do
@@ -92,10 +75,6 @@ do
     #testFileBaseName="test"
     #testFile="${testFileBaseName}.dat"
     #dataFile="data.dat"
-    
-    #plotMaps="../maps.plt"
-    
-    #DoubleLens="${HOME}/Lensing/DoubleLens/bin/Release/DoubleLens"
     
     if [ -r "$inFile" ]
     then
@@ -196,12 +175,8 @@ do
     echo "Creating gnuplot file(s)..."
     echo "plotConf = ${plotConf}" > "$plotFile"
     echo "plotConfFile = \"$(basename ${plotConfFile})\"" >> "$plotFile"
-    #if [ "$plotConf" == "1" ]
-    #then
-    #    cat "$plotConfFile" > "$plotFile"
-    #fi
-    echo "maps = system(\"which ${DOUBLE_LENS_PLOT}\")" >> "$plotFile"
-    echo -n "call maps \"$(basename ${d}/${outFileBaseName}-out)\" " >> "$plotFile"
+    #echo "maps = system(\"which ${DOUBLE_LENS_PLOT}\")" >> "$plotFile"
+    echo -n "call \"$(basename $DOUBLE_LENS_PLOT)\" \"$(basename ${d}/${outFileBaseName}-out)\" " >> "$plotFile"
     head "${outFile}" | grep "##" | "${DOUBLE_LENS_INPUT}" -v "todo=0" -v "random=${random}" >> "$plotFile"
     echo "File ${plotFile}:"
     cat $plotFile
@@ -214,13 +189,13 @@ do
     if [ "${pixels}" != "" ]
     then
         echo "unset key" > "$pixelsPlotFile"
-        "${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
-        echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsFile" >> "$pixelsPlotFile"
+        #"${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
+        echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
     fi
     
     echo "Removing files..."
     rm -vf "${inWorkFile}"
-    #rm -vf "${files[@]}"
+    rm -vf "${files[@]}"
 done 
