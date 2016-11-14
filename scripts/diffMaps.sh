@@ -13,6 +13,14 @@ then
     exit 1
 fi
 
+DOUBLE_LENS_INPUT="$DOUBLE_LENS_SCRIPTS/input.awk"
+echo "DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT"
+if [ ! -x "$DOUBLE_LENS_INPUT" ]
+then
+    echo "The script $DOUBLE_LENS_INPUT is not executable. Please set the correct path."
+    exit 1
+fi
+
 DOUBLE_LENS_DIFF_MAPS_PLOT="$DOUBLE_LENS_SCRIPTS/diffMaps.plt"
 echo "DOUBLE_LENS_DIFF_MAPS_PLOT=$DOUBLE_LENS_DIFF_MAPS_PLOT"
 if [ ! -r "$DOUBLE_LENS_DIFF_MAPS_PLOT" ]
