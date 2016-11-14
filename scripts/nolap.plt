@@ -4,7 +4,7 @@
 f="../nothing.dat"
 
 if (drawEps) {
-    set term postscript eps color solid enhanced
+    @EPS
     set out outname
 }
 if (!drawEps) {
@@ -88,4 +88,7 @@ splot f using 1:2:($$3-2) notitle
 
 unset multiplot
 unset out
-set term wxt
+
+# default terminal defined in the file .gnuplot
+@DEFAULT
+

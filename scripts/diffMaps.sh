@@ -5,11 +5,19 @@ shopt -s extglob
 echo "DOUBLE_LENS_SCRIPTS=$DOUBLE_LENS_SCRIPTS"
 echo "GNUPLOT_LIB=$GNUPLOT_LIB"
 
-DOUBLE_LENS_DOMAINS="$DOUBLE_LENS_SCRIPTS/domains.awk}"
+DOUBLE_LENS_DOMAINS="$DOUBLE_LENS_SCRIPTS/domains.awk"
 echo "DOUBLE_LENS_DOMAINS=$DOUBLE_LENS_DOMAINS"
 if [ ! -x "$DOUBLE_LENS_DOMAINS" ]
 then
     echo "The script $DOUBLE_LENS_DOMAINS is not executable. Please set the correct path."
+    exit 1
+fi
+
+DOUBLE_LENS_INPUT="$DOUBLE_LENS_SCRIPTS/input.awk"
+echo "DOUBLE_LENS_INPUT=$DOUBLE_LENS_INPUT"
+if [ ! -x "$DOUBLE_LENS_INPUT" ]
+then
+    echo "The script $DOUBLE_LENS_INPUT is not executable. Please set the correct path."
     exit 1
 fi
 
