@@ -94,7 +94,8 @@ if (diffConf == 1) {
 set xlabel "{/Symbol b}_x"
 set ylabel "{/Symbol b}_y"
 
-set term postscript eps color solid enhanced
+@EPS
+#set term postscript eps color solid enhanced
 
 set out outname
 set title "Absolute difference between magnifications for " . addtit
@@ -144,5 +145,7 @@ if (diffConf == 1) {
 splot input using 3:4:(($$6-$$11)/$$11) notitle with pm3d
 
 unset out
-set term wxt
+
+# default terminal defined in the .gnuplot file
+@DEFAULT
 
