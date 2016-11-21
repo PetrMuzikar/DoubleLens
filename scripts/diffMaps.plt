@@ -73,11 +73,6 @@ diffConfFile = basename . "-conf.plt"
 
 addtit = sprintf("m_1 = %g, d = %s, {/Symbol b} = %s", m1, d, beta)
 
-# Reading variables
-if (diffConf == 1) {
-    load diffConfFile
-}
-
 set view map
 set pm3d at t corners2color c1
 unset surface
@@ -86,10 +81,6 @@ set title ""
 set lmargin 0.1
 set bmargin 0.1
 set size 1.2, 1.2
-
-if (diffConf == 1) {
-    load diffConfFile
-}
 
 set xlabel "{/Symbol b}_x"
 set ylabel "{/Symbol b}_y"
@@ -102,15 +93,22 @@ set title "Absolute difference between magnifications for " . addtit
 load "diverging_map_gnuplot.pal"
 absPlot = 1
 relPlot = 0
+
 if (diffConf == 1) {
     load diffConfFile
 }
-splot input using 3:4:($$6-$$11) notitle with pm3d
+
+splot input using 3:4:(column(6)-column(11)) notitle with pm3d
 
 set out outname2
 set title "Relative difference between magnifications for " . addtit
 absPlot = 0
 relPlot = 1
+
+if (diffConf == 1) {
+    load diffConfFile
+}
+
 set zrange [-cut:cut]
 set cbrange [-cut:cut]
 
@@ -138,11 +136,7 @@ if (cut == 0.01) {
         .006 1 0.77 .5, .008 1 0.66 .25, 0.01 1 0.55 0)
 }
 
-if (diffConf == 1) {
-    load diffConfFile
-}
-
-splot input using 3:4:(($$6-$$11)/$$11) notitle with pm3d
+splot input using 3:4:((column(6)-column(11))/column(11)) notitle with pm3d
 
 unset out
 
