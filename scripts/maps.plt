@@ -237,7 +237,8 @@ if (plotConf == 1) {
     load plotConfFile
 }
 
-set term wxt
+# default terminal defined in the file .gnuplot
+@DEFAULT
 if (cont == 0 || cont == 2) {
     #"" u 1:2:3:(lab($$1, $$2)) every ::1::1 w labels font "Arial,8" notitle
     if (sub != 1 && div == 1) {
@@ -252,14 +253,14 @@ if (cont == 0 || cont == 2) {
         set title "Double lens: magnification for " . addtit 
         sp dataname u ($$3-cm):4:6 with pm3d
     }
-    set term postscript eps color enhanced
+    @EPS
     set output epsname
     replot
 }
 
 contourTics = system("which contourTics.sh")
 
-set term wxt
+@DEFAULT
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
     load "< " . contourTics . " " . tabname 
@@ -280,7 +281,7 @@ a single lens"
         sp dataname u ($$3-cm):4:6 with pm3d, \
         tabname w d nosurface lt 1 lc rgb "black" notitle
     }
-    set term postscript eps color enhanced
+    @EPS
     set output epscname
     replot
     set cbtics scale default autofreq
@@ -307,8 +308,8 @@ set cbrange [cbmin:cbmax]
 # set output eps2name
 # replot
 
-set term wxt
-    if (cont == 0 || cont == 2) {
+@DEFAULT
+if (cont == 0 || cont == 2) {
     #sp dataname u ($$3-cm):4:7 with pm3d
     if (sub != 1 && div == 1) {
         set title "Double lens: corrected magnification for " . addtit . " / mag. of a single lens"
@@ -322,12 +323,12 @@ set term wxt
         set title "Double lens: corrected magnification for " . addtit 
         sp dataname u ($$3-cm):4:7 with pm3d
     }
-    set term postscript eps color enhanced
+    @EPS
     set output eps2name
     replot
 }
 
-set term wxt
+@DEFAULT
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
     load "< " . contourTics . " " . tab2name 
@@ -349,7 +350,7 @@ lens for " . addtit
         sp dataname u ($$3-cm):4:7 with pm3d notitle, \
         tab2name w d nosurface lt 1 lc rgb "black"
     }
-    set term postscript eps color enhanced
+    @DEFAULT
     set output eps2cname
     replot
     set cbtics scale default autofreq
@@ -369,7 +370,7 @@ set cbrange [cbmin:cbmax]
 # sp dataname u 3:4:8 with pm3d
 # }
 
-set term wxt
+@DEFAULT
 if (cont == 0 || cont == 2) {
     #sp dataname u ($$3-cm):4:8 with pm3d
     if (sub != 1 && div == 1) {
@@ -384,12 +385,12 @@ if (cont == 0 || cont == 2) {
         set title "Analytic map for " . addtit
         sp dataname u ($$3-cm):4:8 with pm3d
     }
-    set term postscript eps color enhanced
+    @EPS
     set output eps3name
     replot
 }
 
-set term wxt
+@DEFAULT
 if (cont == 1 || cont == 2) {
     set cbtics scale 2,0.5
     load "< " . contourTics . " " . tab3name
@@ -410,13 +411,13 @@ if (cont == 1 || cont == 2) {
         sp dataname u ($$3-cm):4:8 with pm3d, \
         tab3name w d nosurface lt 1 lc rgb "black" notitle
     }
-    set term postscript eps color enhanced
+    @EPS
     set output eps3cname
     replot
     #unset key
 }
 
-set term wxt
+@DEFAULT
 unset out
 replot
 
@@ -437,5 +438,6 @@ unset pm3d
 unset log z
 set surface
 set key
-set term wxt
+
+@DEFAULT
 

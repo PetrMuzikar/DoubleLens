@@ -45,12 +45,12 @@ case "$1" in
     ;;
     -c|--cluster)
     SELECT=2
-    kMax=20
+    kMax=46
     shift
     ;;
     *)
     SELECT=2
-    kMax=20
+    kMax=46
     ;;
 esac
 
