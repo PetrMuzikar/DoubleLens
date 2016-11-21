@@ -27,6 +27,22 @@ then
     exit 1
 fi
 
+case "$1" in
+    -l|--local)
+    SELECT=1
+    echo "Assuming computations were done on a regular machine."
+    shift
+    ;;
+    -c|--cluster)
+    SELECT=2
+    echo "Assuming computations were done on the utf-cluster."
+    shift
+    ;;
+    *)
+    SELECT=2
+    ;;
+esac
+
 for outFileBaseName in "$@"
 do
     outDir="${DOUBLE_LENS_WORK_DIR}/outFiles/${outFileBaseName}-out"
@@ -40,7 +56,15 @@ do
     
     for d in "${outFileBaseName}"-+([[:digit:]])
     do
-        f=(${d}/+([[:digit:]])/${d}-out\.dat)
+        case "$SELECT" in
+            1)  # local
+                f=(${d}/${d}-out\.dat)
+                ;;
+            2)  # cluster
+                f=(${d}/+([[:digit:]])/${d}-out\.dat)
+                ;;
+        esac
+
         # $f ... ${f[0]}
     	if [ -f "$f" ]
     	then
