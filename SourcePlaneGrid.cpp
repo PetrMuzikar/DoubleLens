@@ -425,8 +425,9 @@ void SourcePlaneGrid::printFooter(std::ostream& os) const
     //{
         std::string p = "#rtp";
         Int wi = 5;
-        Int w = 18;
+        Int w = 24;
         os << std::scientific;
+        os.precision(12);
         for (UInt i = 0; i < rtpc_.size(); ++i)
         {
             PointInt pix = rtpc_[i].pixel_;

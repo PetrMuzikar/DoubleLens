@@ -81,14 +81,7 @@ public:
         return core_;
     }
 
-    void setCore(Int core)
-    {
-        core_ = core;
-        if ((core < 0) || (core > SOBOL_DIMS / 2))
-        {
-            throw std::runtime_error("InputRays: error: bad core number.");
-        }
-    }
+    void setCore(Int core);
 #endif
 
 private:

@@ -57,13 +57,28 @@ InputRays& InputRays::operator=(const InputRays& rhs)
     return *this;
 }
 
+#ifdef SOBOL_RANDOM_SEQUENCE
+void InputRays::setCore(Int core)
+{
+    core_ = core;
+    gsl_qrng_init(q_);
+    double point[SOBOL_DIMS];
+    Int advance = (2 * core + 1) / SOBOL_DIMS;
+    for (LLInt k = 0; k < advance * n_; ++k)
+    {
+        gsl_qrng_get(q_, point);
+    }
+}
+#endif
+
 PointNum InputRays::getRay(LLInt k) const
 {
 #if defined(SOBOL_RANDOM_SEQUENCE)
     double point[SOBOL_DIMS];
     gsl_qrng_get(q_, point);
-    Num r1 = point[getCore()*2];
-    Num r2 = point[getCore()*2+1];
+    Int ind = (2 * getCore()) % SOBOL_DIMS;
+    Num r1 = point[ind];
+    Num r2 = point[ind+1];
 //    Num x = min_.x() + ((max_.x() - min_.x()) * Num(point[getCore()*2]));
 //    Num y = min_.y() + ((max_.y() - min_.y()) * Num(point[getCore()*2+1]));
 #else
@@ -193,11 +208,9 @@ std::istream& operator>>(std::istream& is, InputRays& ir)
     is >> ir.n_;
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    is >> ir.core_;
-    if (2 * ir.core_ - 1 >= SOBOL_DIMS)
-    {
-        throw std::runtime_error("InputRays::operator>>: too many parallel cores, SOBOL_DIMS exceeded!");
-    }
+    Int core;
+    is >> core;
+    ir.setCore(core);
 #endif
 
     return is;

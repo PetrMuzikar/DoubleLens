@@ -654,6 +654,7 @@ void rays(int argc, char* argv[], const std::string& prefix)
 
     std::cin >> g;
     g.setOutputPrefix(prefix);
+    std::cout << g << std::endl;
 
     if (argc > 4)
     {
