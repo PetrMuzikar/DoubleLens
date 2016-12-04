@@ -11,7 +11,7 @@
 #include "ML/ML.hpp"
 #include "ML/Point.hpp"
 
-#define SOBOL_DIMS 40
+#define SOBOL_DIMS 2
 
 //#define DEBUG_RANDOM
 
@@ -76,12 +76,12 @@ public:
     friend std::istream& operator>>(std::istream& is, InputRays& ir);
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    Int getCore() const
+    LLInt getStart() const
     {
-        return core_;
+        return startOfSequence_;
     }
 
-    void setCore(Int core);
+    void setStart(LLInt start);
 #endif
 
 private:
@@ -117,18 +117,18 @@ private:
     bool printRays_;
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
-    Int core_;
+    LLInt startOfSequence_;
     gsl_qrng* q_;
 #else
     gsl_rng* r_;
     ULong seed_;
 #endif
 
-    void initRandom()
+    void initRandom(LLInt start = 0)
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_alloc(gsl_qrng_sobol, SOBOL_DIMS);
-        core_ = 0;
+        startOfSequence_ = start;
 #else
         r_ = gsl_rng_alloc(gsl_rng_taus);
 #ifdef DEBUG_RANDOM
@@ -145,7 +145,7 @@ private:
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_clone(ir.q_);
-        core_ = ir.core_;
+        startOfSequence_ = ir.startOfSequence_;
 #else
         r_ = gsl_rng_clone(ir.r_);
         seed_ = ir.seed_;

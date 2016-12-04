@@ -112,14 +112,14 @@ public:
     bool printIndexes() const { return spg_.printIndexes(); }
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    Int getCore() const
+    LLInt getStart() const
     {
-        return ir_.getCore();
+        return ir_.getStart();
     }
 
-    void setCore(Int core)
+    void setStart(LLInt start)
     {
-        ir_.setCore(core);
+        ir_.setStart(start);
     }
 #endif
 
