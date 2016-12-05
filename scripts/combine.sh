@@ -53,7 +53,12 @@ then
     exit 1
 fi
 
-recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
+if [ -x gnuplot ]
+then
+    recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
+else
+    recentGnuplot="0"
+fi
 
 for d in "$@"
 do
