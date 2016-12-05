@@ -57,6 +57,8 @@ echo "Machine: ${SELECT}, max. processes: ${kMax}."
 
 for d in "$@"
 do
+    [ -d "$d" ] || continue
+
     outFileBaseName="${d/%-in/}"
     
     inFile="${outFileBaseName}-in.dat"
@@ -72,11 +74,11 @@ do
     plotConfFile="${outFileBaseName}-conf.plt"
     inWorkFile="inWork.dat"
     
-    if [ ! -d "$d" ]
-    then
-        mkdir "$d"
-        mv "${outFileBaseName}"-*\.*(dat|sh|plt) "$d" || exit 1
-    fi
+    #if [ ! -d "$d" ]
+    #then
+    #    mkdir "$d"
+    #    mv "${outFileBaseName}"-*\.*(dat|sh|plt) "$d" || exit 1
+    #fi
     
     pushd "$d"
     
