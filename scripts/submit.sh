@@ -120,7 +120,7 @@ do
                 qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             cronus)
-                qsub -l walltime=120:00:00 -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
+                qsub -l walltime=120:00:00 -v EXEC="${executable}",SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             generic)
                 nohup "${executable}" s "${outFile}" "$f" &
