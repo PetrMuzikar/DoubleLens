@@ -6,17 +6,6 @@ shopt -s extglob
 # set no limits for STACK size
 ulimit -s unlimited
 
-DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
-echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
-echo "$PATH"
-echo "$(env)"
-
-if [ ! -x "$DOUBLE_LENS_JOB" ]
-then
-    echo "$DOUBLE_LENS_JOB is not executable!"
-    exit 1 
-fi
-
 case "$SELECT" in
     utf)
         # submit this script with 
@@ -47,6 +36,17 @@ case "$SELECT" in
         cd $SCRATCH
         CurrDir=$PWD
 
+        DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
+        echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
+        echo "PATH=$PATH"
+        echo "$(env)"
+
+        if [ ! -x "$DOUBLE_LENS_JOB" ]
+        then
+            echo "$DOUBLE_LENS_JOB is not executable!"
+            exit 1 
+        fi
+
         # HERE COMES THE ACTUAL CALCULATION - CALL OF THE MAIN BINARY ETC.:
         inFiles=(*-+([[:digit:]])\.dat)
         f=${inFiles[0]}
@@ -76,6 +76,19 @@ case "$SELECT" in
 
     cronus)
         echo This calculation was done on `hostname`
+
+        PATH="$PBS_O_PATH"
+
+        DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
+        echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
+        echo "PATH=$PATH"
+        echo "$(env)"
+
+        if [ ! -x "$DOUBLE_LENS_JOB" ]
+        then
+            echo "$DOUBLE_LENS_JOB is not executable!"
+            exit 1 
+        fi
 
         # HERE COMES THE ACTUAL CALCULATION - CALL OF THE MAIN BINARY ETC.:
         inFiles=(*-+([[:digit:]])\.dat)
