@@ -79,6 +79,8 @@ case "$SELECT" in
 
         PATH="$PBS_O_PATH"
 
+        cd "$PBS_O_WORKDIR"
+
         DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
         echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
         echo "PATH=$PATH"
