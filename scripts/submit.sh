@@ -132,8 +132,11 @@ do
 done
 
 case "$SELECT" in
-    utf|cronus)
+    utf)
         qstat -f
+        ;;
+    cronus)
+        qstat -u "pmuzikar"
         ;;
     generic)
         echo "Running jobs:"
