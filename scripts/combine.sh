@@ -183,7 +183,7 @@ do
 
     if [ "$recentGnuplot" == "1" ]
     then
-        gnuplot $plotFile
+        gnuplot -e "cd \"$d\"" "$(basename $plotFile)"
     fi
     
     if [ "${pixels}" != "" ]

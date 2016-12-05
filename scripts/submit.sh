@@ -34,24 +34,20 @@ then
 fi
 
 case "$1" in
-    -l|--local)
-    SELECT=1
-    shift
-    ;;
-    -c|--cluster)
-    SELECT=2
-    shift
-    ;;
+    utf)
+        SELECT="$1"
+        kMax=46
+        shift
+        ;;
+    cronus)
+        SELECT="$1"
+        kMax=20
+        shift
+        ;;
     *)
-    SELECT=2
-    ;;
+        SELECT="generic"
+        kMax=4
 esac
-
-if [[ $SELECT == 2 && ! -x "$(which qsub)" ]]
-then
-    echo "Could not find qsub! Use -l while executing this script to run it locally without a grid engine."
-    exit 1
-fi
 
 for d in "$@"
 do
@@ -120,14 +116,14 @@ do
         cp "$f" "${dirName}"
         pushd "$dirName"
         case "$SELECT" in
-            1) # local
-                #nohup "${executable}" s "${outFile}" "$f" "${errFile}" &
-                nohup "${executable}" s "${outFile}" "$f" &
+            utf)
+                qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
-            2) # cluster
-                #cp "$DOUBLE_LENS_SHOOTING" .
-                qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" "${DOUBLE_LENS_SHOOTING}"
-                #qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" "shooting.sh"
+            cronus)
+                qsub -l walltime=120:00:00 -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
+                ;;
+            generic)
+                nohup "${executable}" s "${outFile}" "$f" &
                 ;;
         esac
         popd
@@ -136,12 +132,12 @@ do
 done
 
 case "$SELECT" in
-    1) # local
+    utf|cronus)
+        qstat -f
+        ;;
+    generic)
         echo "Running jobs:"
         ps -u $USER -o pid,cmd | grep "$(basename ${executable})"
-        ;;
-    2) # cluster
-        qstat -f
         ;;
 esac
 

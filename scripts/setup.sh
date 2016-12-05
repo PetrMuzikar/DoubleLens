@@ -38,26 +38,26 @@ fi
 # SOBOL_DIMS == 40 !!!
 
 case "$1" in
-    -l|--local)
-    SELECT=1
-    kMax=4
-    shift
-    ;;
-    -c|--cluster)
-    SELECT=2
-    kMax=46
-    shift
-    ;;
+    utf)
+        SELECT="$1"
+        kMax=46
+        shift
+        ;;
+    cronus)
+        SELECT="$1"
+        kMax=20
+        shift
+        ;;
     *)
-    SELECT=2
-    kMax=46
-    ;;
+        SELECT="generic"
+        kMax=4
 esac
+
+echo "Machine: ${SELECT}, max. processes: ${kMax}."
 
 for d in "$@"
 do
     outFileBaseName="${d/%-in/}"
-    #echo "${outFileBaseName}"
     
     inFile="${outFileBaseName}-in.dat"
     confFile="${outFileBaseName}-conf.sh"
@@ -97,16 +97,6 @@ do
     else
         echo "No config file ${confFile}, assuming default values..."
     fi
-    
-    #plotConf=0
-    #if [ -r "$plotConfFile" ]
-    #then
-    #    echo "Reading gnuplot config file ${plotConfFile}."
-    #    cat "${plotConfFile}"
-    #    plotConf=1
-    #else
-    #    echo "No gnuplot config file ${plotConfFile}, assuming default values..."
-    #fi
     
     random=${random:-0}
     integ=${integ:-0}
@@ -149,6 +139,7 @@ do
     fi
     
     k=0
+    startOfSequence=0
     while read -r line || [[ -n "$line" ]]
     do
         if [ $k -ge $kMax ]
@@ -163,8 +154,10 @@ do
         echo "$line" > "$out"
         if [ $random -eq 0 ]
         then
-            # core for Sobol
-            printf " %s\n" $k >> $out
+            # start of Sobol sequence
+            printf " %s\n" $startOfSequence >> $out
+            add=$(echo "$line" | awk '{print $NF}')
+            (( startOfSequence += add ))
         fi
         cat $inFile >> $out
         echo "${pixels}" >> $out
