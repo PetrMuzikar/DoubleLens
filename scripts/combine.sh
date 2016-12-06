@@ -76,6 +76,7 @@ do
     plotFile="${d}/${outFileBaseName}-plot.plt"
     pixelsFile="${d}/${outFileBaseName}-pixels.dat"
     pixelsPlotFile="${d}/${outFileBaseName}-pixels.plt"
+    pixelsPlotEps="${d}/${outFileBaseName}-pixels.eps"
     inWorkFile="${d}/inWork.dat"
     numRaysFile="${d}/numRays.dat"
     #testFileBaseName="test"
@@ -172,14 +173,14 @@ do
     "$executable" c "$outFile" "$inWorkFile" "${files[@]}"
     for f in ${files[@]}
     do
-        cat "$f" | awk '/^# Time:/{ printf("# computation time: %e s = %.2f h\n", $3, $3 / 3600)} {next;}' >> "$outFile"
+        cat "$f" | awk '/^# Time:/{ printf("# computation time: %.2e s = %.2f h\n", $3, $3 / 3600)} {next;}' >> "$outFile"
     done
     cat "$outFile" | awk 'BEGIN{t=0} /^# computation/{ t += $4 } {next} END{ printf("# total time: %e s = %.2f h\n", t, t / 3600) }' >> "$outFile"
     
     if [ "${pixels}" != "" ]
     then
         echo "Collecting informations about rays recorded in selected pixels..."
-        cat "${files[0]}" | grep "^#p" | sed 's/^#p//g' | tee "$pixelsFile"
+        cat "${files[0]}" | grep "^#p" | tee "$pixelsFile"
         grep -h "^#rtp" "${files[@]}" | sed 's/^#rtp//g' | sort -k1n,2 | awk 'BEGIN{n=0;} /^$|^#/{next} {n++; if (n == 1) {i = $1; j = $2; print; next;} if ((i != $1) || (j != $2)) { i=$1; j=$2; print "\n"; print $0; } else {print $0} }' >> "$pixelsFile"
     fi
     
@@ -192,21 +193,25 @@ do
     echo "File ${plotFile}:"
     cat $plotFile
 
-    if [ "$recentGnuplot" == "1" ]
-    then
-        gnuplot -e "cd \"$d\"" "$(basename $plotFile)"
-    fi
-    
     if [ "${pixels}" != "" ]
     then
-        echo "unset key" > "$pixelsPlotFile"
-        #"${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
+        echo "unset key\n@EPS" > "$pixelsPlotFile"
+        echo "set out $pixelsPlotEps" >> "$pixelsPlotFile"
         echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
+        echo "unset out\n@DEFAULT" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
+    fi
+
+    if [ "$recentGnuplot" == "1" ]
+    then
+        echo "Running gnuplot..."
+        gnuplot -e "cd \"$d\"" "$(basename $plotFile)"
+        gnuplot -e "cd \"$d\"" "$(basename $pixelsPlotFile)"
     fi
     
     echo "Removing files..."
     rm -vf "${inWorkFile}"
+    rm -vf "${numRaysFile}"
     rm -vf "${files[@]}"
 done 
