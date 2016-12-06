@@ -45,6 +45,14 @@ then
     exit 1
 fi
 
+DOUBLE_LENS_HIST="$DOUBLE_LENS_SCRIPTS/draw_hist.jl"
+echo "DOUBLE_LENS_HIST=$DOUBLE_LENS_HIST"
+if [ ! -x "$DOUBLE_LENS_HIST" ]
+then
+    echo "The script $DOUBLE_LENS_HIST is not executable. Please set the correct path."
+    exit 1
+fi
+
 DOUBLE_LENS_PLOT="${DOUBLE_LENS_SCRIPTS}/maps.plt"
 echo "DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT"
 if [ ! -r "$DOUBLE_LENS_PLOT" ]
@@ -203,12 +211,22 @@ do
         cat "$pixelsPlotFile"
     fi
 
+    pushd "$d"
+
     if [ "$recentGnuplot" == "1" ]
     then
         echo "Running gnuplot..."
-        gnuplot -e "cd \"$d\"" "$(basename $plotFile)"
-        gnuplot -e "cd \"$d\"" "$(basename $pixelsPlotFile)"
+        gnuplot "$(basename $plotFile)"
+        gnuplot "$(basename $pixelsPlotFile)"
     fi
+
+    if [ -x julia ]
+    then
+        echo "Generating a histogram of relative errors..."
+        "${DOUBLE_LENS_HIST}" "$(basename $outFile)" 
+    fi
+
+    popd
     
     echo "Removing files..."
     rm -vf "${inWorkFile}"
