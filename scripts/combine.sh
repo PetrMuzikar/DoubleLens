@@ -204,7 +204,7 @@ do
     if [ "${pixels}" != "" ]
     then
         printf "unset key\n@EPS\n" > "$pixelsPlotFile"
-        echo "set out $pixelsPlotEps" >> "$pixelsPlotFile"
+        echo "set out \"$(basename $pixelsPlotEps)\"" >> "$pixelsPlotFile"
         echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
         printf "unset out\n@DEFAULT\nreplot\n" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
