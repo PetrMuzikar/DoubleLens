@@ -198,7 +198,7 @@ do
         echo "unset key\n@EPS" > "$pixelsPlotFile"
         echo "set out $pixelsPlotEps" >> "$pixelsPlotFile"
         echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
-        echo "unset out\n@DEFAULT" >> "$pixelsPlotFile"
+        echo "unset out\n@DEFAULT\nreplot" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
     fi
