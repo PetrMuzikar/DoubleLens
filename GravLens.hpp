@@ -58,7 +58,7 @@ public:
         return *this;
     }
 
-    bool rejectRay(const PointNum& init, Num eps) const
+    bool rejectRay(const PointNum& init, Num eps = 1e-8) const
     {
         for (UInt i = 0; i < numOfLenses_; ++i)
         {
@@ -74,8 +74,7 @@ public:
     PointNum rayInteg(const PointNum& init);
     PointNum raySimple(const PointNum& init) const;
 
-    void images(const PointNum& y, VecPointNum& images, const Num absPrec=1e-8, const Num relPrec=1e-8,
-        const Num remPrec=1e-4) const
+    void images(const PointNum& y, VecPointNum& images, const Num absPrec=1e-8, const Num relPrec=1e-8, const Num remPrec=1e-4) const
     {
         CNum yy(y.x(), y.y());
         CNum z[6];

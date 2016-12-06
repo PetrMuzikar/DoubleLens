@@ -11,8 +11,6 @@
 
 ////#define SHIFT_CORNERS
 
-#define DEBUG_INVERSE_RAY_SHOOTING
-
 //#define USE_OPENMP_WHILE_SHOOTING
 
 #ifdef USE_OPENMP_WHILE_SHOOTING
@@ -230,15 +228,14 @@ void InverseRayShooting<Lens>::shootingInteg()
 #endif
     PointNum init, finish;
     LLInt i;
-//    #pragma omp for private(i, init, finish)
     for (i = 0; i < n; ++i)
     {
-        while (lens_.rejectRay(init = ir_.getRay(i), 1e-8))
+        init = ir_.getRay(i);
+        if (lens_.rejectRay(init))
         {
             spg_.rayFailed();
-#ifdef DEBUG_INVERSE_RAY_SHOOTING
             std::cerr << prefix_ << "InverseRayShooting: A bad ray too close to the lens: " << init << std::endl;
-#endif
+            continue;
         }
 
         try
@@ -273,6 +270,7 @@ void InverseRayShooting<Lens>::shootingInteg()
         {
             spg_.rayFailed();
             std::cerr << prefix_ << iex.what() << std::endl;
+            std::cerr << prefix_ << "InverseRayShooting: Error while integrating the ray: " << init << std::endl;
             continue;
         }
         catch (const std::exception& ex)
