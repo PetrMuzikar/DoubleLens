@@ -61,7 +61,7 @@ then
     exit 1
 fi
 
-if [ -x gnuplot ]
+if [ -x "$(which gnuplot)" ]
 then
     recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
 else
@@ -220,7 +220,7 @@ do
         gnuplot "$(basename $pixelsPlotFile)"
     fi
 
-    if [ -x julia ]
+    if [ -x "$(which julia)" ]
     then
         echo "Generating a histogram of relative errors..."
         "${DOUBLE_LENS_HIST}" "$(basename $outFile)" 
