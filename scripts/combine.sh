@@ -77,6 +77,7 @@ do
     pixelsFile="${d}/${outFileBaseName}-pixels.dat"
     pixelsPlotFile="${d}/${outFileBaseName}-pixels.plt"
     inWorkFile="${d}/inWork.dat"
+    numRaysFile="${d}/numRays.dat"
     #testFileBaseName="test"
     #testFile="${testFileBaseName}.dat"
     #dataFile="data.dat"
@@ -148,12 +149,17 @@ do
     fi
     
     echo "Combining results..."
+    echo "" > "$numRaysFile"
     files=("${d}/${outFileBaseName}"-+([[:digit:]])-out.dat)
     for f in ${files[@]}
     do
-        echo $f
+        echo "$f"
+        tac "$f" | awk '/error=/{e = $3; next;} /outside=/{o = $3; next;} /inside=/{i = $3; next;} /rays=/{r = $3; exit;} END{ printf("%15d %15d %15d %15d\n", r, i, o, e);}' >> "$numRaysFile"
     done
-    tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
+    rr=$(awk '/^$|^#/{next;} {r += $1; e += $4;} END{print r-e;}' "$numRaysFile")
+    #tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
+    tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
+    echo "$rr " >> "$inWorkFile"
     if [ $random -eq 0 ]
     then
         echo "0" >> "$inWorkFile"
