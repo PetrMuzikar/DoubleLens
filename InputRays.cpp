@@ -22,8 +22,7 @@ InputRays::InputRays(bool printRays) : prefix_("# "), printRays_(printRays)
     initRandom();
 }
 
-InputRays::InputRays(DomainType type, Num xLow, Num xHigh, Num yLow, Num yHigh, LLInt n,
-    const std::string& prefix, bool printRays) : type_(type), xLow_(xLow), xHigh_(xHigh),
+InputRays::InputRays(DomainType type, Num xLow, Num xHigh, Num yLow, Num yHigh, LLInt n, const std::string& prefix, bool printRays) : type_(type), xLow_(xLow), xHigh_(xHigh),
     yLow_(yLow), yHigh_(yHigh), n_(n), prefix_(prefix), printRays_(printRays)
 {
     initRandom();
@@ -57,22 +56,30 @@ InputRays& InputRays::operator=(const InputRays& rhs)
     return *this;
 }
 
+#ifdef SOBOL_RANDOM_SEQUENCE
+void InputRays::setStart(LLInt start)
+{
+    startOfSequence_ = start;
+    gsl_qrng_init(q_);
+    double point[SOBOL_DIMS];
+    for (LLInt k = 0; k < start; ++k)
+    {
+        gsl_qrng_get(q_, point);
+    }
+}
+#endif
+
 PointNum InputRays::getRay(LLInt k) const
 {
 #if defined(SOBOL_RANDOM_SEQUENCE)
     double point[SOBOL_DIMS];
     gsl_qrng_get(q_, point);
-    Num r1 = point[getCore()*2];
-    Num r2 = point[getCore()*2+1];
-//    Num x = min_.x() + ((max_.x() - min_.x()) * Num(point[getCore()*2]));
-//    Num y = min_.y() + ((max_.y() - min_.y()) * Num(point[getCore()*2+1]));
+    Num r1 = point[0];
+    Num r2 = point[1];
 #else
     Num r1 = gsl_rng_uniform_pos(r_);
     Num r2 = gsl_rng_uniform_pos(r_);
-//    Num x = min_.x() + (max_.x() - min_.x()) * gsl_rng_uniform_pos(r_);
-//    Num y = min_.y() + (max_.y() - min_.y()) * gsl_rng_uniform_pos(r_);
 #endif
-
 //    LLInt i = k / nx_;
 //    LLInt j = k % nx_;
 //    Num x = min_.x() + dx_ / 2 + dx_ * i;
@@ -140,7 +147,7 @@ std::ostream& operator<<(std::ostream& os, const InputRays& ir)
     os << ir.prefix_ << "    Algorithm: ";
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
-    os << "a Sobol sequence using the GSL, core " << ir.core_ << ".";
+    os << "a Sobol sequence using the GSL, starting point number: " << ir.startOfSequence_ << ".";
 #else
     os << "uniform random " << gsl_rng_name(ir.r_) << " from GSL";
     os << ", seed = " << ir.seed_ << '.';
@@ -193,11 +200,13 @@ std::istream& operator>>(std::istream& is, InputRays& ir)
     is >> ir.n_;
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    is >> ir.core_;
-    if (2 * ir.core_ - 1 >= SOBOL_DIMS)
-    {
-        throw std::runtime_error("InputRays::operator>>: too many parallel cores, SOBOL_DIMS exceeded!");
-    }
+    LLInt start;
+    is >> start;
+    ir.setStart(start);
+#elif defined(RANDOM_RAYS)
+    Int seed;
+    is >> seed;
+    ir.setSeed(seed);
 #endif
 
     return is;
@@ -232,7 +241,7 @@ std::string InputRays::printInput() const
     ss << " " << n_;
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    ss << " " << core_;
+    ss << " " << startOfSequence_;
 #endif
 
     return ss.str();
