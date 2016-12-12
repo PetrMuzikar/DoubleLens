@@ -35,7 +35,7 @@ public:
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         gsl_qrng_free(q_);
-#else
+#elif defined(RANDOM_RAYS)
         gsl_rng_free(r_);
 #endif
     }
@@ -129,7 +129,7 @@ private:
 #if defined(SOBOL_RANDOM_SEQUENCE)
     LLInt startOfSequence_;
     gsl_qrng* q_;
-#else
+#elif defined(RANDOM_RAYS)
     Int seed_;
     gsl_rng* r_;
 #endif
@@ -139,11 +139,11 @@ private:
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_alloc(gsl_qrng_sobol, SOBOL_DIMS);
         startOfSequence_ = start;
-#else
+#elif defined(RANDOM_RAYS)
         r_ = gsl_rng_alloc(gsl_rng_taus);
 #ifdef DEBUG_RANDOM
         seed_ = 0;
-#else
+#elif defined(RANDOM_RAYS)
         seed_ = Int(start);
 #endif
         gsl_rng_set(r_, seed_);
@@ -156,7 +156,7 @@ private:
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_clone(ir.q_);
         startOfSequence_ = ir.startOfSequence_;
-#else
+#elif defined(RANDOM_RAYS)
         r_ = gsl_rng_clone(ir.r_);
         seed_ = ir.seed_;
 #endif

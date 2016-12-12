@@ -76,7 +76,7 @@ PointNum InputRays::getRay(LLInt k) const
     gsl_qrng_get(q_, point);
     Num r1 = point[0];
     Num r2 = point[1];
-#else
+#elif defined(RANDOM_RAYS)
     Num r1 = gsl_rng_uniform_pos(r_);
     Num r2 = gsl_rng_uniform_pos(r_);
 #endif
@@ -148,7 +148,7 @@ std::ostream& operator<<(std::ostream& os, const InputRays& ir)
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
     os << "a Sobol sequence using the GSL, starting point number: " << ir.startOfSequence_ << ".";
-#else
+#elif defined(RANDOM_RAYS)
     os << "uniform random " << gsl_rng_name(ir.r_) << " from GSL";
     os << ", seed = " << ir.seed_ << '.';
 #endif
@@ -242,6 +242,8 @@ std::string InputRays::printInput() const
 
 #ifdef SOBOL_RANDOM_SEQUENCE
     ss << " " << startOfSequence_;
+#elif defined(RANDOM_RAYS)
+    ss << " " << seed_;
 #endif
 
     return ss.str();
