@@ -160,6 +160,8 @@ do
             printf " %s\n" $startOfSequence >> $out
             add=$(echo "$line" | awk '{print $NF}')
             (( startOfSequence += add ))
+        elif
+            echo " $k " >> "$out"
         fi
         cat $inFile >> $out
         echo "${pixels}" >> $out
