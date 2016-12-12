@@ -10,3 +10,4 @@
 /FindDomains/*.layout
 /FindDomains/bin
 /FindDomains/obj
+.*.swp

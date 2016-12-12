@@ -11,7 +11,7 @@
 #include "ML/ML.hpp"
 #include "ML/Point.hpp"
 
-#define SOBOL_DIMS 40
+#define SOBOL_DIMS 2
 
 //#define DEBUG_RANDOM
 
@@ -35,7 +35,7 @@ public:
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         gsl_qrng_free(q_);
-#else
+#elif defined(RANDOM_RAYS)
         gsl_rng_free(r_);
 #endif
     }
@@ -76,12 +76,22 @@ public:
     friend std::istream& operator>>(std::istream& is, InputRays& ir);
 
 #ifdef SOBOL_RANDOM_SEQUENCE
-    Int getCore() const
+    LLInt getStart() const
     {
-        return core_;
+        return startOfSequence_;
     }
 
-    void setCore(Int core);
+    void setStart(LLInt start);
+#elif defined(RANDOM_RAYS)
+    Int getSeed() const
+    {
+        return seed_;
+    }
+
+    void setSeed(Int seed)
+    {
+        gsl_rng_set(r_, seed);
+    }
 #endif
 
 private:
@@ -117,24 +127,24 @@ private:
     bool printRays_;
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
-    Int core_;
+    LLInt startOfSequence_;
     gsl_qrng* q_;
-#else
+#elif defined(RANDOM_RAYS)
+    Int seed_;
     gsl_rng* r_;
-    ULong seed_;
 #endif
 
-    void initRandom()
+    void initRandom(LLInt start = 0)
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_alloc(gsl_qrng_sobol, SOBOL_DIMS);
-        core_ = 0;
-#else
+        startOfSequence_ = start;
+#elif defined(RANDOM_RAYS)
         r_ = gsl_rng_alloc(gsl_rng_taus);
 #ifdef DEBUG_RANDOM
         seed_ = 0;
-#else
-        seed_ = time(0);
+#elif defined(RANDOM_RAYS)
+        seed_ = Int(start);
 #endif
         gsl_rng_set(r_, seed_);
 
@@ -145,8 +155,8 @@ private:
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
         q_ = gsl_qrng_clone(ir.q_);
-        core_ = ir.core_;
-#else
+        startOfSequence_ = ir.startOfSequence_;
+#elif defined(RANDOM_RAYS)
         r_ = gsl_rng_clone(ir.r_);
         seed_ = ir.seed_;
 #endif

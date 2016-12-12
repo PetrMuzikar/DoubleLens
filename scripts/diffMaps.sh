@@ -55,12 +55,12 @@ fOutBaseName="${fOut%.dat}"
 fPlot="${fOut/%.dat/-plot.plt}"
 #fConf="${fOut/%.dat/-conf.sh}"
 fCompare1Conf="${fCompare1/%out.dat/conf.sh}"
-fPlotConf="${fOut/%.dat/-conf.plt}"
+diffConfFile="${fOut/%.dat/-conf.plt}"
 
-if [ -r "$fPlotConf" ]
+if [ -r "$diffConfFile" ]
 then
     diffConf="1"
-    cat "$fPlotConf"
+    cat "$diffConfFile"
 fi
 
 if [ -r "$fCompare1Conf" ]

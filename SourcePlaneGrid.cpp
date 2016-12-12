@@ -427,6 +427,7 @@ void SourcePlaneGrid::printFooter(std::ostream& os) const
         Int wi = 5;
         Int w = 24;
         os << std::scientific;
+        os << std::endl;
         os.precision(12);
         for (UInt i = 0; i < rtpc_.size(); ++i)
         {
