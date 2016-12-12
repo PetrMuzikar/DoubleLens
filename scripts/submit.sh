@@ -128,7 +128,7 @@ do
         esac
         popd
         # Change time => seed of a random number generator.
-        [ "$random" -eq 0] || sleep 1
+        [ "$random" -eq 0 ] || sleep 1
         (( k++ ))
     done
 done
