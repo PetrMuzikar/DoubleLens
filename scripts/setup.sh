@@ -160,7 +160,7 @@ do
             printf " %s\n" $startOfSequence >> $out
             add=$(echo "$line" | awk '{print $NF}')
             (( startOfSequence += add ))
-        elif
+        else
             echo " $k " >> "$out"
         fi
         cat $inFile >> $out
