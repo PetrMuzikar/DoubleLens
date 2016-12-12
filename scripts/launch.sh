@@ -17,13 +17,19 @@ then
 fi
 
 case "$1" in
-    -l|--local|-c|--cluster)
-    c="$1"
-    shift
-    ;;
+    utf)
+        SELECT="$1"
+        kMax=46
+        shift
+        ;;
+    cronus)
+        SELECT="$1"
+        kMax=20
+        shift
+        ;;
     *)
-    c=""
-    ;;
+        SELECT="generic"
+        kMax=4
 esac
 
 echo "$@"
@@ -31,10 +37,5 @@ echo "$@"
 for d in "$@"
 do
     echo "Starting computations: ${d}."
-    if [ "$c" != "" ]
-    then
-        "${DOUBLE_LENS_SETUP}" "$c" "$d" && "$DOUBLE_LENS_SUBMIT" "$c" "$d" && echo "Computing..."
-    else
-        "${DOUBLE_LENS_SETUP}" "$d" && "$DOUBLE_LENS_SUBMIT" "$d" && echo "Computing..."
-    fi
+    "${DOUBLE_LENS_SETUP}" "$SELECT" "$d" && "$DOUBLE_LENS_SUBMIT" "$SELECT" "$d" && echo "Computing..."
 done

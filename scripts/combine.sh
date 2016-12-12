@@ -45,6 +45,14 @@ then
     exit 1
 fi
 
+DOUBLE_LENS_HIST="$DOUBLE_LENS_SCRIPTS/draw_hist.jl"
+echo "DOUBLE_LENS_HIST=$DOUBLE_LENS_HIST"
+if [ ! -x "$DOUBLE_LENS_HIST" ]
+then
+    echo "The script $DOUBLE_LENS_HIST is not executable. Please set the correct path."
+    exit 1
+fi
+
 DOUBLE_LENS_PLOT="${DOUBLE_LENS_SCRIPTS}/maps.plt"
 echo "DOUBLE_LENS_PLOT=$DOUBLE_LENS_PLOT"
 if [ ! -r "$DOUBLE_LENS_PLOT" ]
@@ -53,7 +61,12 @@ then
     exit 1
 fi
 
-recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
+if [ -x "$(which gnuplot)" ]
+then
+    recentGnuplot="$(gnuplot -V | awk '{print ($2 >= 4.6);}')"
+else
+    recentGnuplot="0"
+fi
 
 for d in "$@"
 do
@@ -71,7 +84,9 @@ do
     plotFile="${d}/${outFileBaseName}-plot.plt"
     pixelsFile="${d}/${outFileBaseName}-pixels.dat"
     pixelsPlotFile="${d}/${outFileBaseName}-pixels.plt"
+    pixelsPlotEps="${d}/${outFileBaseName}-pixels.eps"
     inWorkFile="${d}/inWork.dat"
+    numRaysFile="${d}/numRays.dat"
     #testFileBaseName="test"
     #testFile="${testFileBaseName}.dat"
     #dataFile="data.dat"
@@ -143,12 +158,17 @@ do
     fi
     
     echo "Combining results..."
+    echo "" > "$numRaysFile"
     files=("${d}/${outFileBaseName}"-+([[:digit:]])-out.dat)
     for f in ${files[@]}
     do
-        echo $f
+        echo "$f"
+        tac "$f" | awk '/error=/{e = $3; next;} /outside=/{o = $3; next;} /inside=/{i = $3; next;} /rays=/{r = $3; exit;} END{ printf("%15d %15d %15d %15d\n", r, i, o, e);}' >> "$numRaysFile"
     done
-    tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
+    rr=$(awk '/^$|^#/{next;} {r += $1; e += $4;} END{print r-e;}' "$numRaysFile")
+    #tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
+    tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
+    echo "$rr " >> "$inWorkFile"
     if [ $random -eq 0 ]
     then
         echo "0" >> "$inWorkFile"
@@ -161,14 +181,14 @@ do
     "$executable" c "$outFile" "$inWorkFile" "${files[@]}"
     for f in ${files[@]}
     do
-        cat "$f" | awk '/^# Time:/{ printf("# computation time: %e s = %.2f h\n", $3, $3 / 3600)} {next;}' >> "$outFile"
+        cat "$f" | awk '/^# Time:/{ printf("# computation time: %.2e s = %.2f h\n", $3, $3 / 3600)} {next;}' >> "$outFile"
     done
     cat "$outFile" | awk 'BEGIN{t=0} /^# computation/{ t += $4 } {next} END{ printf("# total time: %e s = %.2f h\n", t, t / 3600) }' >> "$outFile"
     
     if [ "${pixels}" != "" ]
     then
         echo "Collecting informations about rays recorded in selected pixels..."
-        cat "${files[0]}" | grep "^#p" | sed 's/^#p//g' | tee "$pixelsFile"
+        cat "${files[0]}" | grep "^#p" | tee "$pixelsFile"
         grep -h "^#rtp" "${files[@]}" | sed 's/^#rtp//g' | sort -k1n,2 | awk 'BEGIN{n=0;} /^$|^#/{next} {n++; if (n == 1) {i = $1; j = $2; print; next;} if ((i != $1) || (j != $2)) { i=$1; j=$2; print "\n"; print $0; } else {print $0} }' >> "$pixelsFile"
     fi
     
@@ -181,21 +201,35 @@ do
     echo "File ${plotFile}:"
     cat $plotFile
 
-    if [ "$recentGnuplot" == "1" ]
-    then
-        gnuplot $plotFile
-    fi
-    
     if [ "${pixels}" != "" ]
     then
-        echo "unset key" > "$pixelsPlotFile"
-        #"${DOUBLE_LENS_DOMAINS}" "$domainsFile" >> "$pixelsPlotFile"
+        printf "unset key\n@EPS\n" > "$pixelsPlotFile"
+        echo "set out \"$(basename $pixelsPlotEps)\"" >> "$pixelsPlotFile"
         echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
+        printf "unset out\n@DEFAULT\nreplot\n" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
     fi
+
+    pushd "$d"
+
+    if [ "$recentGnuplot" == "1" ]
+    then
+        echo "Running gnuplot..."
+        gnuplot "$(basename $plotFile)"
+        gnuplot "$(basename $pixelsPlotFile)"
+    fi
+
+    if [ -x "$(which julia)" ]
+    then
+        echo "Generating a histogram of relative errors..."
+        "${DOUBLE_LENS_HIST}" "$(basename $outFile)" 
+    fi
+
+    popd
     
     echo "Removing files..."
     rm -vf "${inWorkFile}"
+    rm -vf "${numRaysFile}"
     rm -vf "${files[@]}"
 done 
