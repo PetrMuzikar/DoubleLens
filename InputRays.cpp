@@ -203,6 +203,10 @@ std::istream& operator>>(std::istream& is, InputRays& ir)
     LLInt start;
     is >> start;
     ir.setStart(start);
+#elif defined(RANDOM_RAYS)
+    Int seed;
+    is >> seed;
+    ir.setSeed(seed);
 #endif
 
     return is;

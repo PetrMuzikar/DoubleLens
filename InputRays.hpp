@@ -82,6 +82,16 @@ public:
     }
 
     void setStart(LLInt start);
+#elif defined(RANDOM_RAYS)
+    Int getSeed() const
+    {
+        return seed_;
+    }
+
+    void setSeed(Int seed)
+    {
+        gsl_rng_set(r_, seed);
+    }
 #endif
 
 private:
@@ -120,8 +130,8 @@ private:
     LLInt startOfSequence_;
     gsl_qrng* q_;
 #else
+    Int seed_;
     gsl_rng* r_;
-    ULong seed_;
 #endif
 
     void initRandom(LLInt start = 0)
@@ -134,7 +144,7 @@ private:
 #ifdef DEBUG_RANDOM
         seed_ = 0;
 #else
-        seed_ = time(0);
+        seed_ = Int(start);
 #endif
         gsl_rng_set(r_, seed_);
 
