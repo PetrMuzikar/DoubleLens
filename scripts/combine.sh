@@ -227,7 +227,7 @@ do
     popd
     
     echo "Removing files..."
-    #rm -vf "${inWorkFile}"
-    #rm -vf "${numRaysFile}"
-    #rm -vf "${files[@]}"
+    rm -vf "${inWorkFile}"
+    rm -vf "${numRaysFile}"
+    rm -vf "${files[@]}"
 done 
