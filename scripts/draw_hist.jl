@@ -31,12 +31,15 @@ for f in ARGS
     fig += 1;
     p = readdlm(f);
     r = p[:, [3, 4, 10]];
-    filter!(x -> (abs(x[3]) <= maxerr), r);
+    sel = r[:, 3] .<= maxerr
+    r = r[sel, :];
     if isdefined(:xrange)
-        filter!(x -> (xrange[1] <= x[1] <= xrange[2]), r);
+        sel = xrange[1] .<= r[:, 1] .<= xrange[2];
+        r = r[sel, :];
     end
     if isdefined(:yrange)
-        filter!(x -> (yrange[1] <= x[2] <= yrange[2]), r);
+        sel = yrange[1] .<= r[:, 2] .<= yrange[2];
+        r = r[sel, :];
     end
     mu = mean(r[:,3]);
     sigma = std(r[:,3]);
