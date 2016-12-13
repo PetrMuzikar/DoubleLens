@@ -169,10 +169,8 @@ do
     #tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
     tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
     echo "$rr " >> "$inWorkFile"
-    if [ $random -eq 0 ]
-    then
-        echo "0" >> "$inWorkFile"
-    fi
+    # where to start a Sobol sequence, random seed
+    echo "0" >> "$inWorkFile"
     cat "$inFile" >> "$inWorkFile"
     if [ "$pixels" != "" ]
     then
@@ -229,7 +227,7 @@ do
     popd
     
     echo "Removing files..."
-    rm -vf "${inWorkFile}"
-    rm -vf "${numRaysFile}"
-    rm -vf "${files[@]}"
+    #rm -vf "${inWorkFile}"
+    #rm -vf "${numRaysFile}"
+    #rm -vf "${files[@]}"
 done 
