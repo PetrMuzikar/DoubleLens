@@ -137,7 +137,8 @@ done
 
 case "$SELECT" in
     1) # local
-        #ps -u $USER | grep "$(basename ${executable})"
+        echo "Running jobs:"
+        ps -u $USER -o pid,cmd | grep "$(basename ${executable})"
         ;;
     2) # cluster
         qstat -f
