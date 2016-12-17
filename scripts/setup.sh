@@ -38,7 +38,7 @@ fi
 # SOBOL_DIMS == 40 !!!
 
 case "$1" in
-    utf)
+    utf-old|utf-cluster)
         SELECT="$1"
         kMax=46
         shift
