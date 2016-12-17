@@ -18,7 +18,7 @@ then
 fi
 
 case "$1" in
-    utf)
+    utf-old|utf-cluster)
         SELECT="$1"
         kMax=46
         shift
@@ -47,10 +47,10 @@ do
     for d in "${outFileBaseName}"-+([[:digit:]])
     do
         case "$SELECT" in
-            generic|cronus)
+            generic|cronus|utf-cluster)
                 f=(${d}/${d}-out\.dat)
                 ;;
-            utf)
+            utf-old)
                 f=(${d}/+([[:digit:]])/${d}-out\.dat)
                 ;;
         esac
