@@ -34,7 +34,7 @@ then
 fi
 
 case "$1" in
-    utf)
+    utf-old|utf-cluster)
         SELECT="$1"
         kMax=46
         shift
@@ -116,10 +116,10 @@ do
         cp "$f" "${dirName}"
         pushd "$dirName"
         case "$SELECT" in
-            utf)
+            utf-old)
                 qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
-            cronus)
+            cronus|utf-cluster)
                 qsub -l walltime=120:00:00 -v EXEC="${executable}",SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             generic)
@@ -134,11 +134,11 @@ do
 done
 
 case "$SELECT" in
-    utf)
+    utf-old)
         qstat -f
         ;;
-    cronus)
-        qstat -u "pmuzikar"
+    cronus|utf-cluster)
+        qstat -u "$USER"
         ;;
     generic)
         echo "Running jobs:"

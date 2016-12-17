@@ -7,7 +7,7 @@ shopt -s extglob
 ulimit -s unlimited
 
 case "$SELECT" in
-    utf)
+    utf-old)
         # submit this script with 
         # ~$ qsub -cwd -l h_vmem=XXg,h_fsize=XXg job.sh
         #
@@ -74,7 +74,7 @@ case "$SELECT" in
         rmdir $SCRATCH && echo "scratch cleaned"
         ;;
 
-    cronus)
+    cronus|utf-cluster)
         echo This calculation was done on `hostname`
 
         PATH="$PBS_O_PATH"
