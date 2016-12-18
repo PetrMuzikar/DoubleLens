@@ -84,6 +84,7 @@ case "$SELECT" in
         DOUBLE_LENS_JOB="$(which ${DOUBLE_LENS_JOB:-job.sh})"
         echo "DOUBLE_LENS_JOB=${DOUBLE_LENS_JOB}"
         echo "PATH=$PATH"
+        echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
         echo "$(env)"
 
         if [ ! -x "$DOUBLE_LENS_JOB" ]
