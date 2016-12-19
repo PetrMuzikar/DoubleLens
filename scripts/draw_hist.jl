@@ -2,7 +2,7 @@
 
 using PyPlot;
 
-isdefined(:maxerr) || (maxerr = 0.2);
+isdefined(:maxerr) || (maxerr = 0.1);
 isdefined(:nbins) || (nbins = 100);
 isdefined(:suff) || (suff = "hist.eps");
 
