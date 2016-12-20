@@ -33,6 +33,9 @@ then
     echo "DOUBLE_LENS_SHOOTING=${DOUBLE_LENS_SHOOTING}\nPlease set the correct path to the script shooting.sh."
 fi
 
+export WALLTIME="${WALLTIME:-120:00:00}"
+echo "WALLTIME=${WALLTIME}"
+
 case "$1" in
     utf-old|utf-cluster)
         SELECT="$1"
@@ -120,7 +123,7 @@ do
                 qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             cronus|utf-cluster)
-                qsub -l walltime=120:00:00 -v EXEC="${executable}",SELECT="${SELECT}",LD_LIBRARY_PATH="${LD_LIBRARY_PATH}",LIBRARY_PATH="${LIBRARY_PATH}" "${DOUBLE_LENS_SHOOTING}"
+                qsub -l walltime="${WALLTIME}" -v EXEC="${executable}",SELECT="${SELECT}",LD_LIBRARY_PATH="${LD_LIBRARY_PATH}",LIBRARY_PATH="${LIBRARY_PATH}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             generic)
                 nohup "${executable}" s "${outFile}" "$f" &
