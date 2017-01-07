@@ -1,18 +1,32 @@
-#ifndef VEC_HPP
+#ifndef QRNG_HPP
 
 #include <exception>
 #include <stdexcept>
 #include "ML.hpp"
 #include "Vec.hpp"
 
+#define QRNG_LONG
+
+#define QRNG_LONG
+
 namespace ML
 {
     
+#ifdef QRNG_LONG
+typedef LLInt QrngInt;
+#else
+typedef Int QrngInt;
+#endif
+
 class Qrng
 {
 public:
-    Qrng(UInt dim, UInt seed=0) : dim_(dim), i_(0), x_(dim)
+    Qrng(Int dim, Int seed=0) : dim_(dim), i_(0), x_(dim)
     {
+        if (dim < 0)
+        {
+            throw std::length_error("Qrng: dimension could not be negative.");
+        }
         x_ = 0;
     }
 
@@ -29,6 +43,7 @@ public:
     }
 
     virtual void get(VecNum& x) = 0;
+    virtual void get(Num x[]) = 0;
 
     void reset()
     {
@@ -37,9 +52,9 @@ public:
     }
 
 protected:
-    static const UInt w_ = 32;
-    UInt dim_;
-    ULLInt i_;
+    static const Int w_ = 32;
+    Int dim_;
+    QrngInt i_;
     VecNum x_;
 
 };
@@ -47,19 +62,22 @@ protected:
 class QrngHalton : public Qrng
 {
 public:
-    QrngHalton(UInt dim, UInt seed=0) : Qrng(dim, seed) 
+    QrngHalton(Int dim, Int seed=0) : Qrng(dim, seed) 
     {
         if (dim > nPrimes_)
         {
-            throw std::length_error("QrngHalton: net enough primes, decrease the dimension!");
+            throw std::length_error("QrngHalton: not enough primes, decrease the dimension!");
         }
     }
 
     virtual void get(VecNum& x);
+    virtual void get(Num x[]);
  
 private:
-    static const UInt nPrimes_ = 168;
-    static const UInt primes_[QrngHalton::nPrimes_];
+    static const Int nPrimes_ = 168;
+    static const Int primes_[QrngHalton::nPrimes_];
+
+    Num put(QrngInt i, Int d);
 };
 
 
