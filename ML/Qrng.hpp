@@ -7,8 +7,6 @@
 
 #define QRNG_LONG
 
-#define QRNG_LONG
-
 namespace ML
 {
     
@@ -52,7 +50,6 @@ public:
     }
 
 protected:
-    static const Int w_ = 32;
     Int dim_;
     QrngInt i_;
     VecNum x_;
@@ -70,6 +67,22 @@ public:
         }
     }
 
+    QrngHalton(const QrngHalton& rhs) : Qrng(rhs) {}
+
+    QrngHalton& operator=(const QrngHalton& rhs)
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+        dim_ = rhs.dim_;
+        i_ = rhs.i_;
+        x_.resize(rhs.dim_);
+        x_ = rhs.x_;
+
+        return *this;
+    }        
+
     virtual void get(VecNum& x);
     virtual void get(Num x[]);
  
@@ -80,6 +93,33 @@ private:
     Num put(QrngInt i, Int d);
 };
 
+class QrngSobol : public Qrng
+{
+public:
+    QrngSobol(Int dim, Int seed=0) : Qrng(dim, seed) {}
+
+    QrngSobol(const QrngSobol& rhs) : Qrng(rhs) {}
+
+    QrngSobol& operator=(const QrngSobol& rhs)
+    {
+        if (&rhs == this)
+        {
+            return *this;
+        }
+        dim_ = rhs.dim_;
+        i_ = rhs.i_;
+        x_.resize(rhs.dim_);
+        x_ = rhs.x_;
+
+        return *this;
+    }        
+
+    virtual void get(VecNum& x) = 0;
+    virtual void get(Num x[]) = 0;
+
+private:
+    static const Int w_ = 32;
+};
 
 }
 

@@ -1,5 +1,7 @@
 #include "Qrng.hpp"
 
+// Using the algorithm from GSL.
+
 namespace ML
 {
 
@@ -39,4 +41,5 @@ void QrngHalton::get(Num x[])
 }
 
 }
+
 
