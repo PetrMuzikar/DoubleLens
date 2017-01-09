@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 
     LLInt n = 1000000;
     LLInt n2 = 0;
-    const Int dim = 2;
+    const Int dim = 4;
     QrngHalton q(dim);
     Num x[dim];
     VecNum xx(dim);

@@ -1,6 +1,6 @@
 OBJDIR = .obj
 CXX = g++
-CXXFLAGS = -O2 -g -Wall
+CXXFLAGS = -g -Wall
 $(shell mkdir -p $(OBJDIR) > /dev/null)
 
 SRCS = $(wildcard *.cpp)
