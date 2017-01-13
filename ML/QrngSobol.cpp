@@ -1150,26 +1150,39 @@ void QrngSobol::init()
     Int index = 0;
     for (Int d = 0; d < dim_; ++d)
     {
+        //std::cerr << "d = " << d << ", ";
+        //std::cerr << "a = " << a_[d] << ", ";
+        //std::cerr << "s = " << s_[d] << ":\n";
+
         for (Int k = 0; k < s_[d]; ++k)
         {
             m_(d, k) = mStart_[index++];
+            //m_(d, k) = QrngInt(mStart_[index++]) << (w_ - 1 - k);
+            //std::cerr << m_(d, k) << " ";
         }            
+        //std::cerr << " | ";
 
         for (Int k = s_[d]; k < w_; ++k)
         {
             Int aa = a_[d];
-            m_(d, k) = m_(d, k-s_[d]) ^ (m_(d, k-s_[d]) << w_);
+            m_(d, k) = m_(d, k-s_[d]) ^ (m_(d, k-s_[d]) << s_[d]);
             for (Int n = s_[d]-1; n >= 1; --n)
             {   
-                m_(d, k) ^= (QrngInt(1) << n) * (aa % 2) * m_(d, k-n);
+                m_(d, k) ^= (QrngInt(1) << n) * (aa & 1) * m_(d, k-n);
+                //m_(d, k) ^= (aa & QrngInt(1)) * m_(d, k-n);
                 aa >>= 1;
             }
+            //std::cerr << m_(d, k) << " ";
         }
 
+        //std::cerr << "\nRecaled: ";
         for (Int k = 0; k < w_; ++k)
         {
             m_(d, k) <<= w_ - 1 - k;
+            //std::cerr << m_(d, k) << " ";
         }
+
+        //std::cerr << std::endl;
     }
 }
 

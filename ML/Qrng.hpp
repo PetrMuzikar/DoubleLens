@@ -128,7 +128,11 @@ public:
     void reset();
 
 private:
-    static const Int w_ = 32;
+#ifdef QRNG_LONG
+    static const Int w_ = 40;
+#else
+    static const Int w_ = 30;
+#endif
     static const Int mStart_[];
     static const Int s_[];
     static const Int a_[];

@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     LLInt n = 1000000;
     LLInt n2 = 0;
     const Int dim = 4;
-    QrngHalton q(dim);
+    QrngSobol q(dim);
     Num x[dim];
     VecNum xx(dim);
 
@@ -29,13 +29,18 @@ int main(int argc, char* argv[])
 
     for (LLInt i = 0; i < n; ++i)
     {
-        q.get(xx);
+        q.get(x);
     }
 
+    std::cout << std::scientific << std::setprecision(12);
     for (LLInt i = 0; i < n2; ++i)
     {
-        q.get(xx);
-        std::cout << xx << std::endl;
+        q.get(x);
+        for (Int k = 0; k < dim; ++k)
+        {
+            std::cout << std::setw(20) << x[k];
+        }
+        std::cout << std::endl;
     }
 
     return 0;
