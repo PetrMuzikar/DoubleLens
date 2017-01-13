@@ -36,6 +36,7 @@ for f in args
     figure(fig);
     clf();
     plt[:hist](r, bins);
+    gca()[:set_xlim](-maxerr, maxerr);
     xlabel("relative differences");
     ylabel("counts");
     xx = gca()[:get_xlim]()[2]*0.5;

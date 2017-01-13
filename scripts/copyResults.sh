@@ -18,19 +18,19 @@ then
 fi
 
 case "$1" in
-    -l|--local)
-    SELECT=1
-    echo "Assuming computations were done on a regular machine."
-    shift
-    ;;
-    -c|--cluster)
-    SELECT=2
-    echo "Assuming computations were done on the utf-cluster."
-    shift
-    ;;
+    utf)
+        SELECT="$1"
+        kMax=46
+        shift
+        ;;
+    cronus)
+        SELECT="$1"
+        kMax=20
+        shift
+        ;;
     *)
-    SELECT=2
-    ;;
+        SELECT="generic"
+        kMax=4
 esac
 
 for outFileBaseName in "$@"
@@ -47,10 +47,10 @@ do
     for d in "${outFileBaseName}"-+([[:digit:]])
     do
         case "$SELECT" in
-            1)  # local
+            generic|cronus)
                 f=(${d}/${d}-out\.dat)
                 ;;
-            2)  # cluster
+            utf)
                 f=(${d}/+([[:digit:]])/${d}-out\.dat)
                 ;;
         esac

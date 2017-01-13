@@ -11,6 +11,7 @@ typedef int Int;
 typedef size_t UInt;
 typedef unsigned long ULong;
 typedef long long int LLInt;
+typedef unsigned long long int ULLInt;
 typedef double Num;
 typedef std::complex<Num> CNum;
 

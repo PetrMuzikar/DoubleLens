@@ -65,6 +65,16 @@ public:
         return *this;
     }
 
+    Vec& operator=(const T& left)
+    {
+        for (UInt i = 0; i < size_; ++i)
+        {
+            data_[i] = left;
+        }
+
+        return *this;
+    }
+
     const T& operator[](UInt i) const
     {
         return data_[i];
