@@ -1,5 +1,4 @@
 /bin
-/obj
 /data
 /data_zoo
 /data_cluster
@@ -9,7 +8,7 @@
 /FindDomains/*.depend
 /FindDomains/*.layout
 /FindDomains/bin
-/FindDomains/obj
+/FindDomains/.obj
 /ML/.obj
 /ML/MLTest
 .*.swp
