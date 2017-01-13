@@ -13,3 +13,5 @@
 /ML/.obj
 /ML/MLTest
 .*.swp
+/.obj
+*.o
