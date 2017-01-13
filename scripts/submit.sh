@@ -91,10 +91,10 @@ do
     
     choice=$(( random + 2 * integ ))
     case $choice in
-        0) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolSimple" ;;
-        1) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomSimple" ;;
-        2) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolInteg" ;;
-        3) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomInteg" ;;
+        0) executable="${DOUBLE_LENS}/bin/DoubleLensSobolSimple" ;;
+        1) executable="${DOUBLE_LENS}/bin/DoubleLensRandomSimple" ;;
+        2) executable="${DOUBLE_LENS}/bin/DoubleLensSobolInteg" ;;
+        3) executable="${DOUBLE_LENS}/bin/DoubleLensRandomInteg" ;;
         *) executable="none" ;;
     esac
     

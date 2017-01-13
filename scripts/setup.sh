@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLens})"
+DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLensSobolSimple})"
 echo "DOUBLE_LENS_EXEC=$DOUBLE_LENS_EXEC"
 if [ ! -x "$DOUBLE_LENS_EXEC" ]
 then
