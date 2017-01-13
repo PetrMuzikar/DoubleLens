@@ -59,8 +59,8 @@ std::ostream& operator<<(std::ostream& os, const Domain& dom)
             os << "  " << dom.rLow;
             os << "  " << dom.rHigh;
             break;
-        deault:
-            throw std::runtime_error("Domain::operator<<: bad type.");
+//        deault:
+//            throw std::runtime_error("Domain::operator<<: bad type.");
     }
 
     return os;
