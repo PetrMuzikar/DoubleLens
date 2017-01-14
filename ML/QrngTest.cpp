@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     LLInt nStep = 1000000;
     LLInt nWrite = 0;
     LLInt nRepeat = 1;
-    const Int dim = 4;
+    const Int dim = 2;
     QrngSobol q(dim);
     Num x[dim];
 
@@ -39,22 +39,26 @@ int main(int argc, char* argv[])
     clock_t t0 = clock();
     clock_t t1 = t0;
     clock_t t = t0;
+    LLInt counter = 0;
     for (LLInt r = 0; r < nRepeat; ++r)
     {
         std::cout << std::setprecision(12);
         for (LLInt s = 0; s < nStep; ++s)
         {
             q.get(x);
+            counter++;
         }
 
         for (LLInt w = 0; w < nWrite; ++w)
         {
             q.get(x);
+            std::cout << std::setw(12) << counter;
             for (Int d = 0; d < dim; ++d)
             {
                 std::cout << std::setw(20) << x[d];
             }
             std::cout << std::endl;
+            counter++;
         }
         t = clock();
         std::cout << std::setprecision(3);
