@@ -1,7 +1,8 @@
+BINDIR = bin
 OBJDIR = .obj
 CXX = g++
 CXXFLAGS = -g -O2 -Wall
-$(shell mkdir -p $(OBJDIR) > /dev/null)
+$(shell mkdir -p $(BINDIR) $(OBJDIR) > /dev/null)
 
 SRCS = $(wildcard *.cpp)
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
@@ -9,9 +10,9 @@ DEPS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.d))
 
 .PHONY : all clean
 
-all : MLTest
+all : $(BINDIR)/QrngTest
 
-MLTest : $(OBJS)
+$(BINDIR)/QrngTest : $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $@ $+ $(LDFLAGS)
 
 $(OBJDIR)/%.o : %.cpp
@@ -21,5 +22,5 @@ $(OBJDIR)/%.o : %.cpp
 -include $(DEPS)
 
 clean :
-	rm -rf $(OBJDIR)
+	rm -rf $(BINDIR) $(OBJDIR)
 

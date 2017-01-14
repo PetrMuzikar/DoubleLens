@@ -12,7 +12,8 @@ CXXFLAGS_RandomInteg = -UDEBUG_MAIN -DINTEGRATE_PHOTON_PATH -DRANDOM_RAYS
 LDFLAGS = -lm -lgsl -lgslcblas
 
 SRC_LENS = $(wildcard *.cpp) 
-SRC_ML = $(filter-out ML/MLTest.cpp, $(wildcard ML/*.cpp))
+SRC_ML_TEST = $(addprefix ML/, QrngTest.cpp)
+SRC_ML = $(filter-out $(SRC_ML_TEST), $(wildcard ML/*.cpp))
 SRC = $(SRC_LENS) $(SRC_ML)
 
 OBJDIR_LENS = .obj
