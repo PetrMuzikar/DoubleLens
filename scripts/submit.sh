@@ -33,8 +33,11 @@ then
     echo "DOUBLE_LENS_SHOOTING=${DOUBLE_LENS_SHOOTING}\nPlease set the correct path to the script shooting.sh."
 fi
 
+export WALLTIME="${WALLTIME:-120:00:00}"
+echo "WALLTIME=${WALLTIME}"
+
 case "$1" in
-    utf)
+    utf-old|utf-cluster)
         SELECT="$1"
         kMax=46
         shift
@@ -88,10 +91,10 @@ do
     
     choice=$(( random + 2 * integ ))
     case $choice in
-        0) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolSimple" ;;
-        1) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomSimple" ;;
-        2) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolInteg" ;;
-        3) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomInteg" ;;
+        0) executable="${DOUBLE_LENS}/bin/DoubleLensSobolSimple" ;;
+        1) executable="${DOUBLE_LENS}/bin/DoubleLensRandomSimple" ;;
+        2) executable="${DOUBLE_LENS}/bin/DoubleLensSobolInteg" ;;
+        3) executable="${DOUBLE_LENS}/bin/DoubleLensRandomInteg" ;;
         *) executable="none" ;;
     esac
     
@@ -116,11 +119,11 @@ do
         cp "$f" "${dirName}"
         pushd "$dirName"
         case "$SELECT" in
-            utf)
+            utf-old)
                 qsub -cwd -l h_vmem=500m,h_fsize=500m -v EXEC="${executable}" -v SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
-            cronus)
-                qsub -l walltime=120:00:00 -v EXEC="${executable}",SELECT="${SELECT}" "${DOUBLE_LENS_SHOOTING}"
+            cronus|utf-cluster)
+                qsub -l walltime="${WALLTIME}" -v EXEC="${executable}",SELECT="${SELECT}",LD_LIBRARY_PATH="${LD_LIBRARY_PATH}",LIBRARY_PATH="${LIBRARY_PATH}" "${DOUBLE_LENS_SHOOTING}"
                 ;;
             generic)
                 nohup "${executable}" s "${outFile}" "$f" &
@@ -134,11 +137,11 @@ do
 done
 
 case "$SELECT" in
-    utf)
+    utf-old)
         qstat -f
         ;;
-    cronus)
-        qstat -u "pmuzikar"
+    cronus|utf-cluster)
+        qstat -u "$USER"
         ;;
     generic)
         echo "Running jobs:"

@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 shopt -s nullglob
 shopt -s extglob
@@ -142,10 +142,10 @@ do
     #prefix="${HOME}/Lensing/DoubleLens"
     choice=$(( random + 2 * integ ))
     case $choice in
-        0) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolSimple" ;;
-        1) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomSimple" ;;
-        2) executable="${DOUBLE_LENS}/bin/Release/DoubleLensSobolInteg" ;;
-        3) executable="${DOUBLE_LENS}/bin/Release/DoubleLensRandomInteg" ;;
+        0) executable="${DOUBLE_LENS}/bin/DoubleLensSobolSimple" ;;
+        1) executable="${DOUBLE_LENS}/bin/DoubleLensRandomSimple" ;;
+        2) executable="${DOUBLE_LENS}/bin/DoubleLensSobolInteg" ;;
+        3) executable="${DOUBLE_LENS}/bin/DoubleLensRandomInteg" ;;
         *) executable="none" ;;
     esac
     
@@ -169,10 +169,8 @@ do
     #tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
     tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
     echo "$rr " >> "$inWorkFile"
-    if [ $random -eq 0 ]
-    then
-        echo "0" >> "$inWorkFile"
-    fi
+    # where to start a Sobol sequence, random seed
+    echo "0" >> "$inWorkFile"
     cat "$inFile" >> "$inWorkFile"
     if [ "$pixels" != "" ]
     then

@@ -14,7 +14,8 @@ BEGIN {
     yLow = 0;
     yHigh = 0;
     n = 0;
-    core = 0;
+    start = 0;
+    seed = 0;
 
     M_MSun = 0;
     mu1 = 0;
@@ -45,7 +46,7 @@ BEGIN {
         yLow = $6;
         yHigh = $7;
         n = $8;
-        core = $9; #!!!
+        start = $9; #!!!
 
         M_MSun = $10;
         mu1 = $11;
@@ -72,22 +73,23 @@ BEGIN {
         yLow = $6;
         yHigh = $7;
         n = $8;
+        seed = $9;
 
-        M_MSun = $9;
-        mu1 = $10;
-        Dskpc = $11;
-        d = $12;
-        d1 = $13;
-        beta = $14;
-        nrE = $15;
-        prec = $16;
+        M_MSun = $10;
+        mu1 = $11;
+        Dskpc = $12;
+        d = $13;
+        d1 = $14;
+        beta = $15;
+        nrE = $16;
+        prec = $17;
 
-        xLowGrid = $17;
-        xHighGrid = $18;
-        nxGrid = $19;
-        yLowGrid = $20;
-        yHighGrid = $21;
-        nyGrid = $22;
+        xLowGrid = $18;
+        xHighGrid = $19;
+        nxGrid = $21;
+        yLowGrid = $21;
+        yHighGrid = $22;
+        nyGrid = $23;
     }
 
     m1 = m1mu1(mu1, beta);

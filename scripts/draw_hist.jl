@@ -2,48 +2,59 @@
 
 using PyPlot;
 
-maxerr = 0.2;
-nbins = 100;
+isdefined(:maxerr) || (maxerr = 0.1);
+isdefined(:nbins) || (nbins = 100);
+isdefined(:suff) || (suff = "hist.eps");
 
-args = ARGS
+println("maxerr = ", maxerr);
+println("nbins = ", nbins);
+println("suff = ", suff);
 
-num = tryparse(Float64, args[1])
-if !isnull(num)
-    maxerr = get(num)
-    args = args[2:end]
+desc = "";
+if isdefined(:xrange)
+    s = "xrange = $(xrange)\n";
+    print(s);
+    desc *= s;
 end
-num = tryparse(Int64, args[1])
-if !isnull(num)
-    nbins = get(num)
-    args = args[2:end]
-end
 
-println("maxerr = ", maxerr)
-println("nbins = ", nbins)
+if isdefined(:yrange)
+    s = "yrange = $(yrange)\n";
+    print(s);
+    desc *= s;
+end
 
 bins = linspace(-maxerr, maxerr, nbins);
 
 fig = 0
-for f in args
+for f in ARGS
     println("Reading the file $(f).")
     fig += 1;
     p = readdlm(f);
-    r = p[:, end-1];
-    filter!(x -> (abs(x) <= maxerr), r);
-    mu = mean(r);
-    sigma = std(r);
+    r = p[:, [3, 4, 10]];
+    sel = r[:, 3] .<= maxerr
+    r = r[sel, :];
+    if isdefined(:xrange)
+        sel = xrange[1] .<= r[:, 1] .<= xrange[2];
+        r = r[sel, :];
+    end
+    if isdefined(:yrange)
+        sel = yrange[1] .<= r[:, 2] .<= yrange[2];
+        r = r[sel, :];
+    end
+    mu = mean(r[:,3]);
+    sigma = std(r[:,3]);
 
     figure(fig);
     clf();
-    plt[:hist](r, bins);
+    plt[:hist](r[:,3], bins);
     gca()[:set_xlim](-maxerr, maxerr);
     xlabel("relative differences");
     ylabel("counts");
     xx = gca()[:get_xlim]()[2]*0.5;
     yy = gca()[:get_ylim]()[2]*0.9;
-    ss = @sprintf("μ = %.4e\nσ = %.4e", mu, sigma)
+    ss = @sprintf("μ = %.4e\nσ = %.4e\n%s", mu, sigma, desc);
     text(xx, yy, ss);
-    epsf = replace(f, r"out.dat$", "hist.eps");
+    epsf = replace(f, r"out.dat$", suff);
     savefig(epsf);
 end
 

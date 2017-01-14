@@ -17,7 +17,7 @@ then
     exit 1
 fi
 
-DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLens})"
+DOUBLE_LENS_EXEC="$(which ${DOUBLE_LENS_EXEC:-DoubleLensSobolSimple})"
 echo "DOUBLE_LENS_EXEC=$DOUBLE_LENS_EXEC"
 if [ ! -x "$DOUBLE_LENS_EXEC" ]
 then
@@ -38,7 +38,7 @@ fi
 # SOBOL_DIMS == 40 !!!
 
 case "$1" in
-    utf)
+    utf-old|utf-cluster)
         SELECT="$1"
         kMax=46
         shift
@@ -160,7 +160,7 @@ do
             printf " %s\n" $startOfSequence >> $out
             add=$(echo "$line" | awk '{print $NF}')
             (( startOfSequence += add ))
-        elif
+        else
             echo " $k " >> "$out"
         fi
         cat $inFile >> $out
