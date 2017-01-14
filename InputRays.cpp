@@ -9,6 +9,7 @@
 
 #include "ML/ML.hpp"
 #include "ML/Point.hpp"
+#include "ML/Qrng.hpp"
 #include "InputRays.hpp"
 
 //#define DEBUG_INPUT_RAYS
@@ -60,22 +61,39 @@ InputRays& InputRays::operator=(const InputRays& rhs)
 void InputRays::setStart(LLInt start)
 {
     startOfSequence_ = start;
+#ifdef GSL_SOBOL
     gsl_qrng_init(q_);
     double point[SOBOL_DIMS];
     for (LLInt k = 0; k < start; ++k)
     {
         gsl_qrng_get(q_, point);
     }
+#else
+    qs_.reset();
+    Num point[SOBOL_DIMS];
+    for (LLInt k = 0; k < start; ++k)
+    {
+        qs_.get(point);
+    }
+#endif
 }
 #endif
 
-PointNum InputRays::getRay(LLInt k) const
+PointNum InputRays::getRay(LLInt k)
 {
 #if defined(SOBOL_RANDOM_SEQUENCE)
+#ifdef GSL_SOBOL
     double point[SOBOL_DIMS];
     gsl_qrng_get(q_, point);
     Num r1 = point[0];
     Num r2 = point[1];
+#else
+    Num point[SOBOL_DIMS];
+    qs_.get(point);
+    Num r1 = point[0];
+    Num r2 = point[1];
+#endif
+
 #elif defined(RANDOM_RAYS)
     Num r1 = gsl_rng_uniform_pos(r_);
     Num r2 = gsl_rng_uniform_pos(r_);
@@ -123,9 +141,6 @@ Num InputRays::area() const
 
 std::ostream& operator<<(std::ostream& os, const InputRays& ir)
 {
-    Int w1 = 12;
-    Int w2 = 20;
-
     os << ir.prefix_ << "InputRays:\n";
     os << ir.prefix_ << "    " << ir.getNumRays() << " rays are generated in the ";
 
@@ -147,29 +162,36 @@ std::ostream& operator<<(std::ostream& os, const InputRays& ir)
     os << ir.prefix_ << "    Algorithm: ";
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
+#ifdef GSL_SOBOL
     os << "a Sobol sequence using the GSL, starting point number: " << ir.startOfSequence_ << ".";
+#else
+    os << "a Sobol sequence using the algorithm described in Joe & Kuo, starting point number: " << ir.startOfSequence_ << ".";
+#endif
+
 #elif defined(RANDOM_RAYS)
     os << "uniform random " << gsl_rng_name(ir.r_) << " from GSL";
     os << ", seed = " << ir.seed_ << '.';
 #endif
 //    os << "uniform rectangular grid.";
-    if (ir.printRays())
-    {
-        os << std::endl << ir.prefix_ <<"    Rays:\n";
-        os << ir.prefix_;
-        os << std::setw(w1 - ir.prefix_.size()) << "i";
-        os << std::setw(w2) << "x";
-        os << std::setw(w2) << "y";
-        os << std::endl;
-        for (LLInt i = 0; i < ir.getNumRays(); ++i)
-        {
-            PointNum ray = ir.getRay(i);
-            os << std::setw(w1) << i+1;
-            os << std::setw(w2) << ray.x();
-            os << std::setw(w2) << ray.y();
-            os << std::endl;
-        }
-    }
+    //if (ir.printRays())
+    //{
+    //    Int w1 = 12;
+    //    Int w2 = 20;
+    //    os << std::endl << ir.prefix_ <<"    Rays:\n";
+    //    os << ir.prefix_;
+    //    os << std::setw(w1 - ir.prefix_.size()) << "i";
+    //    os << std::setw(w2) << "x";
+    //    os << std::setw(w2) << "y";
+    //    os << std::endl;
+    //    for (LLInt i = 0; i < ir.getNumRays(); ++i)
+    //    {
+    //        PointNum ray = ir.getRay(i);
+    //        os << std::setw(w1) << i+1;
+    //        os << std::setw(w2) << ray.x();
+    //        os << std::setw(w2) << ray.y();
+    //        os << std::endl;
+    //    }
+    //}
     return os;
 }
 

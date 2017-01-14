@@ -10,6 +10,7 @@
 
 #include "ML/ML.hpp"
 #include "ML/Point.hpp"
+#include "ML/Qrng.hpp"
 
 #define SOBOL_DIMS 2
 
@@ -17,6 +18,8 @@
 
 //#define RANDOM_RAYS
 //#define SOBOL_RANDOM_SEQUENCE
+
+//#define GSL_SOBOL
 
 using namespace ML;
 
@@ -33,7 +36,7 @@ public:
 
     ~InputRays()
     {
-#if defined(SOBOL_RANDOM_SEQUENCE)
+#if defined(SOBOL_RANDOM_SEQUENCE) && defined(GSL_SOBOL)
         gsl_qrng_free(q_);
 #elif defined(RANDOM_RAYS)
         gsl_rng_free(r_);
@@ -46,7 +49,7 @@ public:
     {
         return n_;
     }
-    PointNum getRay(LLInt i) const;
+    PointNum getRay(LLInt i);
 
     void setOutputPrefix(const std::string& pref)
     {
@@ -128,34 +131,48 @@ private:
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
     LLInt startOfSequence_;
+#ifdef GSL_SOBOL
     gsl_qrng* q_;
+#else
+    QrngSobol qs_;
+#endif
+
 #elif defined(RANDOM_RAYS)
     Int seed_;
     gsl_rng* r_;
 #endif
 
-    void initRandom(LLInt start = 0)
+    void initRandom()
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
+#ifdef GSL_SOBOL
         q_ = gsl_qrng_alloc(gsl_qrng_sobol, SOBOL_DIMS);
-        startOfSequence_ = start;
+#else
+        qs_ = QrngSobol(SOBOL_DIMS);
+#endif
+        startOfSequence_ = 0;
+
 #elif defined(RANDOM_RAYS)
         r_ = gsl_rng_alloc(gsl_rng_taus);
 #ifdef DEBUG_RANDOM
         seed_ = 0;
-#elif defined(RANDOM_RAYS)
-        seed_ = Int(start);
+#else
+        seed_ = Int(time(0));
 #endif
         gsl_rng_set(r_, seed_);
-
 #endif
     }
 
     void copyRandom(const InputRays& ir)
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
+#ifdef GSL_SOBOL
         q_ = gsl_qrng_clone(ir.q_);
+#else
+        qs_ = ir.qs_;
+#endif
         startOfSequence_ = ir.startOfSequence_;
+
 #elif defined(RANDOM_RAYS)
         r_ = gsl_rng_clone(ir.r_);
         seed_ = ir.seed_;

@@ -5,8 +5,8 @@ BIN = $(addprefix $(BINDIR)/, $(BINARIES))
 
 CXX = g++
 CXXFLAGS = -g -O2 -Wall -std=c++11 -I ML
-CXXFLAGS_SobolSimple = -UDEBUG_MAIN -DSOBOL_RANDOM_SEQUENCE -DINTEGRATE_PHOTON_PATH
-CXXFLAGS_SobolInteg = -UDEBUG_MAIN -DSOBOL_RANDOM_SEQUENCE
+CXXFLAGS_SobolSimple = -UDEBUG_MAIN -DSOBOL_RANDOM_SEQUENCE 
+CXXFLAGS_SobolInteg = -UDEBUG_MAIN -DSOBOL_RANDOM_SEQUENCE -DINTEGRATE_PHOTON_PATH
 CXXFLAGS_RandomSimple = -UDEBUG_MAIN -DRANDOM_RAYS 
 CXXFLAGS_RandomInteg = -UDEBUG_MAIN -DINTEGRATE_PHOTON_PATH -DRANDOM_RAYS
 LDFLAGS = -lm -lgsl -lgslcblas
@@ -39,9 +39,6 @@ OBJ_RandomInteg = $(addprefix $(OBJDIR_LENS)/DoubleLensRandomInteg/, $(OBJ_LENS)
 DEP_RandomInteg = $(addprefix $(OBJDIR_LENS)/DoubleLensRandomInteg/, $(DEP_LENS)) 
 
 $(shell mkdir -p $(BINDIR) $(OBJDIRS) $(OBJDIR_ML) > /dev/null)
-
-$(info $(OBJDIR_ML))
-$(info $(OBJ_SobolSimple))
 
 .PHONY : all clean
 

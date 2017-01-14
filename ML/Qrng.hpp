@@ -1,4 +1,5 @@
 #ifndef QRNG_HPP
+#define QRNG_HPP
 
 #include <exception>
 #include <stdexcept>
@@ -20,7 +21,7 @@ typedef Int QrngInt;
 class Qrng
 {
 public:
-    Qrng(Int dim, Int seed=0) : dim_(dim), i_(0)
+    Qrng(Int dim=1, Int seed=0) : dim_(dim), i_(0)
     {
         if (dim < 0)
         {
@@ -41,6 +42,11 @@ public:
     virtual void get(VecNum& x) = 0;
     virtual void get(Num x[]) = 0;
 
+    QrngInt index() const
+    {
+        return i_;
+    }
+
     void reset()
     {
         i_ = 0;
@@ -54,7 +60,7 @@ protected:
 class QrngHalton : public Qrng
 {
 public:
-    QrngHalton(Int dim, Int seed=0) : Qrng(dim, seed) 
+    QrngHalton(Int dim=1, Int seed=0) : Qrng(dim, seed) 
     {
         if (dim > nPrimes_)
         {
@@ -89,7 +95,7 @@ private:
 class QrngSobol : public Qrng
 {
 public:
-    QrngSobol(Int dim, Int seed=0) : Qrng(dim, seed)
+    QrngSobol(Int dim=1, Int seed=0) : Qrng(dim, seed)
     {
         if (dim > maxDim_)
         {
