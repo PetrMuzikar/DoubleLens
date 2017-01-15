@@ -1168,7 +1168,7 @@ void QrngSobol::init()
             m_(d, k) = m_(d, k-s_[d]) ^ (m_(d, k-s_[d]) << s_[d]);
             for (Int n = s_[d]-1; n >= 1; --n)
             {   
-                m_(d, k) ^= (QrngInt(1) << n) * (aa & 1) * m_(d, k-n);
+                m_(d, k) ^= (QrngInt(1) << n) * (aa & QrngInt(1)) * m_(d, k-n);
                 //m_(d, k) ^= (aa & QrngInt(1)) * m_(d, k-n);
                 aa >>= 1;
             }
@@ -1195,10 +1195,10 @@ void QrngSobol::reset()
 void QrngSobol::get(Num x[])
 {
     Int index = 0;
-    Int i = i_;
+    QrngInt i = i_;
     static const Num p = pow(2.0, -w_);
 
-    while (i & 1)
+    while (i & QrngInt(1))
     {
         i >>= 1;
         index++;
