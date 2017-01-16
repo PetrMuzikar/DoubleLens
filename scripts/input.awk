@@ -37,8 +37,8 @@ BEGIN {
 }
 
 {
-    if (random == 0) {
-        # Sobol
+    if (random != 1) {
+        # Sobol or Halton
         type = $2;
         S = $3;
         xLow = $4;

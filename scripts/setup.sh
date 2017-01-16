@@ -154,9 +154,9 @@ do
         out="${outFileBaseName}-$k.dat"
         echo "$out"
         echo "$line" > "$out"
-        if [ $random -eq 0 ]
+        if [ $random -ne 1 ]
         then
-            # start of Sobol sequence
+            # start of Sobol or Halton sequence
             printf " %s\n" $startOfSequence >> $out
             add=$(echo "$line" | awk '{print $NF}')
             (( startOfSequence += add ))
