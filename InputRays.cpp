@@ -57,20 +57,20 @@ InputRays& InputRays::operator=(const InputRays& rhs)
     return *this;
 }
 
-#ifdef SOBOL_RANDOM_SEQUENCE
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
 void InputRays::setStart(LLInt start)
 {
     startOfSequence_ = start;
-#ifdef GSL_SOBOL
+#ifdef GSL_QRNG
     gsl_qrng_init(q_);
-    double point[SOBOL_DIMS];
+    double point[QRNG_DIMS];
     for (LLInt k = 0; k < start; ++k)
     {
         gsl_qrng_get(q_, point);
     }
 #else
     qs_.reset();
-    Num point[SOBOL_DIMS];
+    Num point[QRNG_DIMS];
     for (LLInt k = 0; k < start; ++k)
     {
         qs_.get(point);
@@ -81,14 +81,14 @@ void InputRays::setStart(LLInt start)
 
 PointNum InputRays::getRay(LLInt k)
 {
-#if defined(SOBOL_RANDOM_SEQUENCE)
-#ifdef GSL_SOBOL
-    double point[SOBOL_DIMS];
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
+#ifdef GSL_QRNG
+    double point[QRNG_DIMS];
     gsl_qrng_get(q_, point);
     Num r1 = point[0];
     Num r2 = point[1];
 #else
-    Num point[SOBOL_DIMS];
+    Num point[QRNG_DIMS];
     qs_.get(point);
     Num r1 = point[0];
     Num r2 = point[1];
@@ -162,10 +162,17 @@ std::ostream& operator<<(std::ostream& os, const InputRays& ir)
     os << ir.prefix_ << "    Algorithm: ";
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
-#ifdef GSL_SOBOL
+#ifdef GSL_QRNG
     os << "a Sobol sequence using the GSL, starting point number: " << ir.startOfSequence_ << ".";
 #else
     os << "a Sobol sequence using the algorithm described in Joe & Kuo, starting point number: " << ir.startOfSequence_ << ".";
+#endif
+
+#elif defined(HALTON_RANDOM_SEQUENCE)
+#ifdef GSL_QRNG
+    os << "a Halton sequence using the GSL, starting point number: " << ir.startOfSequence_ << ".";
+#else
+    os << "a Halton sequence, starting point number: " << ir.startOfSequence_ << ".";
 #endif
 
 #elif defined(RANDOM_RAYS)
@@ -221,7 +228,7 @@ std::istream& operator>>(std::istream& is, InputRays& ir)
 
     is >> ir.n_;
 
-#ifdef SOBOL_RANDOM_SEQUENCE
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
     LLInt start;
     is >> start;
     ir.setStart(start);
@@ -262,7 +269,7 @@ std::string InputRays::printInput() const
 
     ss << " " << n_;
 
-#ifdef SOBOL_RANDOM_SEQUENCE
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
     ss << " " << startOfSequence_;
 #elif defined(RANDOM_RAYS)
     ss << " " << seed_;

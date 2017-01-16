@@ -12,14 +12,15 @@
 #include "ML/Point.hpp"
 #include "ML/Qrng.hpp"
 
-#define SOBOL_DIMS 2
+#define QRNG_DIMS 2
 
 //#define DEBUG_RANDOM
 
 //#define RANDOM_RAYS
 //#define SOBOL_RANDOM_SEQUENCE
+//#define HALTON_RANDOM_SEQUENCE
 
-//#define GSL_SOBOL
+//#define GSL_QRNG
 
 using namespace ML;
 
@@ -36,7 +37,7 @@ public:
 
     ~InputRays()
     {
-#if defined(SOBOL_RANDOM_SEQUENCE) && defined(GSL_SOBOL)
+#if (defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)) && defined(GSL_QRNG)
         gsl_qrng_free(q_);
 #elif defined(RANDOM_RAYS)
         gsl_rng_free(r_);
@@ -78,7 +79,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const InputRays& ir);
     friend std::istream& operator>>(std::istream& is, InputRays& ir);
 
-#ifdef SOBOL_RANDOM_SEQUENCE
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
     LLInt getStart() const
     {
         return startOfSequence_;
@@ -131,10 +132,18 @@ private:
 
 #if defined(SOBOL_RANDOM_SEQUENCE)
     LLInt startOfSequence_;
-#ifdef GSL_SOBOL
+#ifdef GSL_QRNG
     gsl_qrng* q_;
 #else
     QrngSobol qs_;
+#endif
+
+#elif defined(HALTON_RANDOM_SEQUENCE)
+    LLInt startOfSequence_;
+#ifdef GSL_QRNG
+    gsl_qrng* q_;
+#else
+    QrngHalton qs_;
 #endif
 
 #elif defined(RANDOM_RAYS)
@@ -145,10 +154,18 @@ private:
     void initRandom()
     {
 #if defined(SOBOL_RANDOM_SEQUENCE)
-#ifdef GSL_SOBOL
-        q_ = gsl_qrng_alloc(gsl_qrng_sobol, SOBOL_DIMS);
+#ifdef GSL_QRNG
+        q_ = gsl_qrng_alloc(gsl_qrng_sobol, QRNG_DIMS);
 #else
-        qs_ = QrngSobol(SOBOL_DIMS);
+        qs_ = QrngSobol(QRNG_DIMS);
+#endif
+        startOfSequence_ = 0;
+
+#elif defined(HALTON_RANDOM_SEQUENCE)
+#ifdef GSL_QRNG
+        q_ = gsl_qrng_alloc(gsl_qrng_halton, QRNG_DIMS);
+#else
+        qs_ = QrngHalton(QRNG_DIMS);
 #endif
         startOfSequence_ = 0;
 
@@ -165,8 +182,8 @@ private:
 
     void copyRandom(const InputRays& ir)
     {
-#if defined(SOBOL_RANDOM_SEQUENCE)
-#ifdef GSL_SOBOL
+#if defined(SOBOL_RANDOM_SEQUENCE) || defined(HALTON_RANDOM_SEQUENCE)
+#ifdef GSL_QRNG
         q_ = gsl_qrng_clone(ir.q_);
 #else
         qs_ = ir.qs_;
