@@ -140,12 +140,14 @@ do
     echo "pixels: ${pixels}"
     
     #prefix="${HOME}/Lensing/DoubleLens"
-    choice=$(( random + 2 * integ ))
+    choice=$(( integ + 2 * random ))
     case $choice in
         0) executable="${DOUBLE_LENS}/bin/DoubleLensSobolSimple" ;;
-        1) executable="${DOUBLE_LENS}/bin/DoubleLensRandomSimple" ;;
-        2) executable="${DOUBLE_LENS}/bin/DoubleLensSobolInteg" ;;
+        1) executable="${DOUBLE_LENS}/bin/DoubleLensSobolInteg" ;;
+        2) executable="${DOUBLE_LENS}/bin/DoubleLensRandomSimple" ;;
         3) executable="${DOUBLE_LENS}/bin/DoubleLensRandomInteg" ;;
+        4) executable="${DOUBLE_LENS}/bin/DoubleLensHaltonSimple" ;;
+        5) executable="${DOUBLE_LENS}/bin/DoubleLensHaltonInteg" ;;
         *) executable="none" ;;
     esac
     
