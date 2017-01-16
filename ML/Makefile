@@ -1,7 +1,7 @@
 BINDIR = bin
 OBJDIR = .obj
 CXX = g++
-CXXFLAGS = -g -O2 -Wall
+CXXFLAGS = -g -Wall
 $(shell mkdir -p $(BINDIR) $(OBJDIR) > /dev/null)
 
 SRCS = $(wildcard *.cpp)

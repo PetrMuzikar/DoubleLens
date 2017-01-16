@@ -228,7 +228,8 @@ void GravLens::integrate()
 
     gsl_odeiv2_system sys = {GravLens::odeSystem, 0, Dim, &data};
 
-    const gsl_odeiv2_step_type* T = gsl_odeiv2_step_rkf45;
+//    const gsl_odeiv2_step_type* T = gsl_odeiv2_step_rkf45;
+    const gsl_odeiv2_step_type* T = gsl_odeiv2_step_rk8pd;
     gsl_odeiv2_step* step = gsl_odeiv2_step_alloc(T, Dim);
     gsl_odeiv2_control* cont = gsl_odeiv2_control_y_new(0.0, eps);
     gsl_odeiv2_evolve* evol = gsl_odeiv2_evolve_alloc(Dim);
