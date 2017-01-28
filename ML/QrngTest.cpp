@@ -25,12 +25,12 @@ public:
     Pixels(Int nDiv=100) : nDiv_(nDiv)
     {
         nPixels_ = nDiv_ * nDiv_;
-        nTested_ = 0;
+        nTested_ = 0LL;
         nWatched_ = 0;
         d_ = 1.0 / nDiv_;
     }
 
-    Int len() const { return Int(p_.size()); }
+    Int len() const { return nWatched_; }
 
     void addPixel(Int i, Int j)
     {
@@ -58,7 +58,7 @@ public:
 private:
     Int nDiv_;
     Int nPixels_;
-    Int nTested_;
+    LLInt nTested_;
     Int nWatched_;
     Num d_;
     std::vector<Pixel> p_;
