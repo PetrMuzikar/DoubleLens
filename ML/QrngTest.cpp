@@ -6,9 +6,6 @@
 #include <gsl/gsl_qrng.h>
 #include "Qrng.hpp"
 
-//#define GSL_SOBOL
-//#define GSL_RANDOM
-
 using namespace ML;
 
 struct Pixel
@@ -69,9 +66,9 @@ std::istream& operator>>(std::istream& is, Pixels& pix)
     Int nDiv, i, j;
     is >> nDiv;
     pix = Pixels(nDiv);
-    while (is)
+    while (!is.eof() && !is.bad())
     {
-        is >> i >> j;
+        is >> i >> j >> std::ws;
         pix.addPixel(i, j);
     }
 
@@ -179,19 +176,42 @@ int main(int argc, char* argv[])
     return 0;
     */
 
-    Int nRays;
-    Pixels pix;
-
-#if defined(GSL_SOBOL)
     gsl_qrng* q = gsl_qrng_alloc(gsl_qrng_sobol, 2);
-    std::cout << "# Generator: " << gsl_qrng_name(q) << std::endl;
-#elif defined(GSL_RANDOM)
     gsl_rng_env_setup();
     gsl_rng* r = gsl_rng_alloc(gsl_rng_default);
-    std::cout << "# Generator: " << gsl_rng_name(r) << std::endl;
-#else
     QrngSobol myQ(2);
-#endif
+
+    Int ch = 0;
+    if (argc > 1)
+    {
+        std::stringstream ss(argv[1]);
+        ss >> ch;
+        if (ss.bad())
+        {
+            std::cerr << "Error while reading the choice.\n";
+            ch = 0;
+        }
+    }
+
+    switch (ch)
+    {
+    case 0:
+        std::cout << "# Generator: my sobol.\n";
+        break;
+    case 1:
+        std::cout << "# Generator: " << gsl_qrng_name(q) << std::endl;
+        break;
+    case 2:
+        std::cout << "# Generator: " << gsl_rng_name(r) << std::endl;
+        break;
+    default:
+        std::cerr << "Bad choice, using ch = 0.\n";
+        ch = 0;
+        std::cout << "# Generator: my sobol.\n";
+    }
+
+    Int nRays;
+    Pixels pix;
 
     std::cin >> nRays;
     std::cin >> pix;
@@ -200,18 +220,26 @@ int main(int argc, char* argv[])
     LLInt nMax = LLInt(1) << l;
     LLInt when = LLInt(1) << (l - 10);
 
+    const Int choice = ch;
     for (LLInt n = 1; n <= nMax; ++n)
     {
         Num x[2];
 
-#if defined(GSL_SOBOL)
-        gsl_qrng_get(q, x);
-#elif defined(GSL_RANDOM)
-        x[0] = gsl_rng_uniform(r);
-        x[1] = gsl_rng_uniform(r);
-#else
-        myQ.get(x);
-#endif
+        switch (choice)
+        {
+        case 0:
+            myQ.get(x);
+            break;
+        case 1:
+            gsl_qrng_get(q, x);
+            break;
+        case 2:
+            x[0] = gsl_rng_uniform(r);
+            x[1] = gsl_rng_uniform(r);
+            break;
+        default:
+            exit(1);
+        }
 
         pix.add(x);
 
@@ -222,11 +250,8 @@ int main(int argc, char* argv[])
         }
     }
 
-#if defined(GSL_SOBOL)
     gsl_qrng_free(q);
-#elif defined(GSL_RANDOM)
     gsl_rng_free(r);
-#endif
 
     return 0;
 }
