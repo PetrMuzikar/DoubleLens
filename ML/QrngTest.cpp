@@ -1,6 +1,7 @@
 #include <iostream>
-#include <ctime>
 #include <sstream>
+#include <fstream>
+#include <ctime>
 #include <vector>
 #include <gsl/gsl_rng.h>
 #include <gsl/gsl_qrng.h>
@@ -193,28 +194,66 @@ int main(int argc, char* argv[])
         }
     }
 
+    std::string outFile("out.dat");
+    std::ofstream ofs;
+    if (argc > 2)
+    {
+        std::stringstream ss(argv[2]);
+        ss >> outFile;
+        if (ss.bad())
+        {
+            std::cerr << "Error while reading the name of output file.\n";
+        }
+    }
+    ofs.open(outFile.c_str());
+    if (!ofs.is_open())
+    {
+        std::cerr << "Error while opening the file " << outFile << ".\n";
+        exit(1);
+    }
+
+    std::string inFile("in.dat");
+    std::ifstream ifs;
+    if (argc > 3)
+    {
+        std::stringstream ss(argv[3]);
+        ss >> inFile;
+        if (ss.bad())
+        {
+            std::cerr << "Error while reading the name of input file.\n";
+        }
+    }
+    ifs.open(inFile.c_str());
+    if (!ifs.is_open())
+    {
+        std::cerr << "Error while opening the file " << inFile << ".\n";
+        exit(1);
+    }
+
     switch (ch)
     {
     case 0:
-        std::cout << "# Generator: my sobol.\n";
+        ofs << "# Generator: my sobol.\n";
         break;
     case 1:
-        std::cout << "# Generator: " << gsl_qrng_name(q) << std::endl;
+        ofs << "# Generator: " << gsl_qrng_name(q) << std::endl;
         break;
     case 2:
-        std::cout << "# Generator: " << gsl_rng_name(r) << std::endl;
+        ofs << "# Generator: " << gsl_rng_name(r) << std::endl;
         break;
     default:
         std::cerr << "Bad choice, using ch = 0.\n";
         ch = 0;
-        std::cout << "# Generator: my sobol.\n";
+        ofs << "# Generator: my sobol.\n";
     }
 
     Int nRays;
     Pixels pix;
 
-    std::cin >> nRays;
-    std::cin >> pix;
+    ifs >> nRays;
+    ifs >> pix;
+
+    ifs.close();
 
     Int l = floor(log(nRays) / log(2.0));
     LLInt nMax = LLInt(1) << l;
@@ -245,11 +284,12 @@ int main(int argc, char* argv[])
 
         if (n == when)
         {
-            std::cout << pix << std::endl;
+            ofs << pix << std::endl;
             when <<= 1;
         }
     }
 
+    ofs.close();
     gsl_qrng_free(q);
     gsl_rng_free(r);
 
