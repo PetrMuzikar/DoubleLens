@@ -78,28 +78,33 @@ std::istream& operator>>(std::istream& is, Pixels& pix)
 std::ostream& operator<<(std::ostream& os, const Pixels& pix)
 {
     Num norm = Num(pix.nTested_) / pix.nPixels_;
-    Int w = 8;
-    Int w1 = 12;
-    Int w2 = 16;
+    Int w = 7;
+    Int w1 = 11;
+    Int w2 = 15;
+
     os << std::scientific;
     os.precision(6);
     os << "# nDiv = " << pix.nDiv_ << " => " << pix.nPixels_ << " pixels\n";
-    os << "# nTested = " << pix.nTested_ << " => " << norm << " per pixel\n";
+    os << "# nTested = " << pix.nTested_  << std::endl;
     os << "#" << std::setw(w-1) << "pixel";
-    os << std::setw(w) << "pixel_i" << std::setw(w) << "pixel_j";
+    os << std::setw(w) << "i" << std::setw(w) << "j";
     os << std::setw(w1) << "counts";
+    os << std::setw(w2) << "perPixel";
     os << std::setw(w2) << "absDiff";
     os << std::setw(w2) << "relDiff";
     os << std::endl;
+
     for (Int k = 0; k < pix.nWatched_; ++k)
     {
         const Pixel& p = pix.p_[k];
+        Num absDiff = p.counter - norm;
+        Num relDiff = absDiff / norm;
+
         os << std::setw(w) << k;
         os << std::setw(w) << p.i;
         os << std::setw(w) << p.j;
         os << std::setw(w1) << p.counter;
-        Num absDiff = p.counter - norm;
-        Num relDiff = absDiff / norm;
+        os << std::setw(w2) << norm;
         os << std::setw(w2) << absDiff;
         os << std::setw(w2) << relDiff;
         os << std::endl;
@@ -257,7 +262,7 @@ int main(int argc, char* argv[])
 
     Int l = floor(log(nRays) / log(2.0));
     LLInt nMax = LLInt(1) << l;
-    LLInt when = LLInt(1) << (l - 10);
+    LLInt when = LLInt(1) << (l - 14);
 
     const Int choice = ch;
     for (LLInt n = 1; n <= nMax; ++n)
