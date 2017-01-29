@@ -38,8 +38,8 @@ public:
 
     void add(Num x[])
     {
-        Num i = floor(x[0] / d_);
-        Num j = floor(x[1] / d_);
+        Int i = Int(floor(x[0] / d_));
+        Int j = Int(floor(x[1] / d_));
         for (Int k = 0; k < nWatched_; ++k)
         {
             if ((p_[k].i == i) && (p_[k].j == j))
@@ -67,9 +67,8 @@ std::istream& operator>>(std::istream& is, Pixels& pix)
     Int nDiv, i, j;
     is >> nDiv;
     pix = Pixels(nDiv);
-    while (!is.eof() && !is.bad())
+    while (is >> i >> j)
     {
-        is >> i >> j >> std::ws;
         pix.addPixel(i, j);
     }
 
@@ -80,6 +79,7 @@ std::ostream& operator<<(std::ostream& os, const Pixels& pix)
 {
     Num norm = Num(pix.nTested_) / pix.nPixels_;
     Int w = 8;
+    Int w1 = 12;
     Int w2 = 16;
     os << std::scientific;
     os.precision(6);
@@ -87,7 +87,7 @@ std::ostream& operator<<(std::ostream& os, const Pixels& pix)
     os << "# nTested = " << pix.nTested_ << " => " << norm << " per pixel\n";
     os << "#" << std::setw(w-1) << "pixel";
     os << std::setw(w) << "pixel_i" << std::setw(w) << "pixel_j";
-    os << std::setw(w) << "counts";
+    os << std::setw(w1) << "counts";
     os << std::setw(w2) << "absDiff";
     os << std::setw(w2) << "relDiff";
     os << std::endl;
@@ -97,7 +97,7 @@ std::ostream& operator<<(std::ostream& os, const Pixels& pix)
         os << std::setw(w) << k;
         os << std::setw(w) << p.i;
         os << std::setw(w) << p.j;
-        os << std::setw(w) << p.counter;
+        os << std::setw(w1) << p.counter;
         Num absDiff = p.counter - norm;
         Num relDiff = absDiff / norm;
         os << std::setw(w2) << absDiff;
@@ -247,7 +247,7 @@ int main(int argc, char* argv[])
         ofs << "# Generator: my sobol.\n";
     }
 
-    Int nRays;
+    LLInt nRays;
     Pixels pix;
 
     ifs >> nRays;
