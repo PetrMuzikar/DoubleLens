@@ -24,7 +24,7 @@ function draw_hist(files...; maxerr=0.1, nbins=100, suff="hist.eps", xrange=[], 
         fig += 1;
         p = readdlm(f);
         r = p[:, [3, 4, 10]];
-        sel = r[:, 3] .<= maxerr
+        sel = abs(r[:, 3]) .<= maxerr
         r = r[sel, :];
         if length(xrange) == 2
             sel = xrange[1] .<= r[:, 1] .<= xrange[2];
