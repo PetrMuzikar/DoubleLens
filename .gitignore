@@ -9,6 +9,7 @@
 /FindDomains/*.layout
 /FindDomains/bin
 /FindDomains/.obj
+/ML/bin
 /ML/.obj
 /ML/MLTest
 .*.swp
