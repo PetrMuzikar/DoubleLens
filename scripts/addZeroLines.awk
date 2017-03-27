@@ -3,7 +3,7 @@
 BEGIN {
     nPix = 400
     lastPix = nPix - 1
-    pix = -1e6
+    pix = -1;
     low = 1;
     xLow = 0;
     yLow = 0;
@@ -26,9 +26,9 @@ BEGIN {
     y = $4 + dy;
     printf("%5d%5d%20e%20e", $1, nPix, x, y);
     printf("%10d", pix); 
-    printf("%15e%15e", pix, pix); 
+    printf("%15e%15e", 0, 0); 
     printf("%22e%22e", 0, 0); 
-    printf("%15e%15e", pix, pix); 
+    printf("%15e%15e", 0, 0); 
     printf(" #zero\n");
 
     if ($1 == lastPix) {
@@ -38,9 +38,9 @@ BEGIN {
             y = yLow + i * dy;
             printf("%5d%5d%20e%20e", nPix, i, x, y);
             printf("%10d", pix); 
-            printf("%15e%15e", pix, pix); 
+            printf("%15e%15e", 0, 0); 
             printf("%22e%22e", 0, 0); 
-            printf("%15e%15e", pix, pix); 
+            printf("%15e%15e", 0, 0); 
             printf(" #zero\n");
         }
     }
