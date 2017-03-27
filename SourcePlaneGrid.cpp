@@ -421,7 +421,7 @@ void SourcePlaneGrid::printData(std::ostream& os) const
             os.precision(prec);
             os << std::scientific;
             os << std::setw(width) << (betaX_(i) - dx);
-            os << std::setw(width) << yAdd;
+            os << std::setw(width) << yAdd - dy;
             os.precision(precOld);
 
             if (ifComputeMagnification())
@@ -464,7 +464,7 @@ void SourcePlaneGrid::printData(std::ostream& os) const
             }
             os.precision(prec);
             os << std::scientific;
-            os << std::setw(width) << xAdd;
+            os << std::setw(width) << xAdd - dx;
             os << std::setw(width) << yy - dy;
             os.precision(precOld);
 
