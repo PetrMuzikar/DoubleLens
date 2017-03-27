@@ -39,7 +39,7 @@ SourcePlaneGrid::SourcePlaneGrid(const SourcePlaneGrid& other)
     magnificationExpr_(other.magnificationExpr_),
     prefix_(other.prefix_), printIndexes_(other.printIndexes_),
     ifComputeMagnification_(other.ifComputeMagnification_),
-    shiftCorners_(other.shiftCorners_)
+    shiftCorners_(other.shiftCorners_), printZeros_(other.printZeros_)
 {
 #ifdef RAYS_TO_PIXEL
     rtpc_ = other.rtpc_;
@@ -71,6 +71,7 @@ SourcePlaneGrid& SourcePlaneGrid::operator=(const SourcePlaneGrid& rhs)
     printIndexes_ = rhs.printIndexes_;
     ifComputeMagnification_ = rhs.ifComputeMagnification_;
     shiftCorners_ = rhs.shiftCorners_;
+    printZeros_ = rhs.printZeros_;
 #ifdef RAYS_TO_PIXEL
     rtpc_ = rhs.rtpc_;
 #endif
@@ -129,6 +130,7 @@ void SourcePlaneGrid::init()
     printIndexes_ = true;
     ifComputeMagnification_ = false;
     shiftCorners_ = false;
+    printZeros_ = false;
 
 #ifdef RAYS_TO_PIXEL
     for (UInt i = 0; i < rtpc_.size(); ++i)
@@ -270,7 +272,6 @@ void SourcePlaneGrid::computeLaplaceCorrection()
             laplace / 24.0;
 }
 
-
 void SourcePlaneGrid::printHeader(std::ostream& os) const
 {
     Int w = 30;
@@ -323,6 +324,10 @@ void SourcePlaneGrid::printData(std::ostream& os) const
     Int precOld = os.precision();
     Int prec = 11;
     Int precHigh = 13;
+
+    Int raysGnuplot = -100; 
+    const Num xAdd = betaX_(n-1) + diffGrid_.x();
+    const Num yAdd = betaY_(n-1) + diffGrid_.y();
 
     Num dx, dy;
 
@@ -404,9 +409,82 @@ void SourcePlaneGrid::printData(std::ostream& os) const
                 os << std::setw(intWidth) << pixels_(i, j) << std::endl;
             }
         }
+
+        if (printZeros())
+        {
+//            os << std::fixed;
+            if (printIndexes())
+            {
+                os << std::setw(intWidth) << i;
+                os << std::setw(intWidth) << n;
+            }
+            os.precision(prec);
+            os << std::scientific;
+            os << std::setw(width) << (betaX_(i) - dx);
+            os << std::setw(width) << yAdd;
+            os.precision(precOld);
+
+            if (ifComputeMagnification())
+            {
+                os << std::setw(w) << raysGnuplot;
+                os << std::setw(w1) << 0;
+                os << std::setw(w1) << 0;
+                os.precision(precHigh);
+                os << std::setw(wWidth) << 0;
+                os << std::setw(wWidth) << 0;
+                os.precision(precOld);
+                os << std::setw(w1) << raysGnuplot;
+                os << std::setw(w1) << raysGnuplot;
+                os << std::endl;
+            }
+            else
+            {
+                os << std::setw(intWidth) << raysGnuplot << std::endl;
+            }
+        }
+
         if (i < m-1)
         {
             os << std::endl;
+        }
+    }
+
+    if (printZeros())
+    {
+
+        os << std::endl;
+
+        for (Int j = 0; j <= n; ++j)
+        {
+            Num yy = ((j < n) ? betaY_(j) : yAdd);
+            if (printIndexes())
+            {
+                os << std::setw(intWidth) << m;
+                os << std::setw(intWidth) << j;
+            }
+            os.precision(prec);
+            os << std::scientific;
+            os << std::setw(width) << xAdd;
+            os << std::setw(width) << yy - dy;
+            os.precision(precOld);
+
+            if (ifComputeMagnification())
+            {
+                os << std::setw(w) << raysGnuplot;
+                os << std::setw(w1) << 0;
+                os << std::setw(w1) << 0;
+                os.precision(precHigh);
+                os << std::setw(wWidth) << 0;
+                os << std::setw(wWidth) << 0;
+                os.precision(precOld);
+                os << std::setw(w1) << raysGnuplot;
+                os << std::setw(w1) << raysGnuplot;
+                os << std::endl;
+            }
+            else
+            {
+                os << std::setw(intWidth) << raysGnuplot << std::endl;
+            }
         }
     }
 }

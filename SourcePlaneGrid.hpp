@@ -120,6 +120,9 @@ public:
     void shiftCorners(bool dec) { shiftCorners_ = dec; }
     bool shiftCorners() const { return shiftCorners_; }
 
+    void printZeros(bool dec) { printZeros_ = dec; }
+    bool printZeros() const { return printZeros_; }
+
     void printHeader(std::ostream& os) const;
     void printData(std::ostream& os) const;
     void printFooter(std::ostream& os) const;
@@ -155,6 +158,7 @@ private:
     bool printIndexes_;
     bool ifComputeMagnification_;
     bool shiftCorners_;
+    bool printZeros_;
 
 #ifdef RAYS_TO_PIXEL
     RaysToPixelCollection rtpc_;

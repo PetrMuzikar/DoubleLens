@@ -632,6 +632,7 @@ void combineData(int argc, char* argv[], const std::string& prefix)
 
     irs.computeMagnification();
     spg.shiftCorners(true);
+    spg.printZeros(true);
     std::cout << irs;
     std::cout << prefix << "norm= " << irs.norm() << std::endl;
 
