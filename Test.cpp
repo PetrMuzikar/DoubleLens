@@ -466,15 +466,6 @@ void run(const std::string& prefix)
     std::cout << irs << std::flush;
 }
 
-//void watchPixels(const std::string& prefix)
-//{
-//    InverseRayShooting<GravLens> irs;
-//    std::cin >> irs;
-//    irs.setOutputPrefix(prefix);
-//
-//    std::cout << irs.printInput() << std::endl;
-//}
-
 void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
 {
 //    InverseRayShooting<GravLens> irs;

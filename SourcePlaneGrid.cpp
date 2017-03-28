@@ -325,7 +325,7 @@ void SourcePlaneGrid::printData(std::ostream& os) const
     Int prec = 11;
     Int precHigh = 13;
 
-    Int raysGnuplot = -100; 
+    Int raysGnuplot = -1; 
     const Num xAdd = betaX_(n-1) + diffGrid_.x();
     const Num yAdd = betaY_(n-1) + diffGrid_.y();
 
@@ -375,7 +375,6 @@ void SourcePlaneGrid::printData(std::ostream& os) const
     {
         for (Int j = 0; j < n; j++)
         {
-//            os << std::fixed;
             if (printIndexes())
             {
                 os << std::setw(intWidth) << i;
@@ -392,8 +391,6 @@ void SourcePlaneGrid::printData(std::ostream& os) const
                 rel = (magnification_(i, j) - magnificationSimple_(i, j)) / magnificationSimple_(i, j);
                 relLap = (magnificationLaplace_(i, j) - magnificationSimple_(i, j)) / magnificationSimple_(i, j);
                 os << std::setw(w) << pixels_(i, j);
-//                os.precision(prec);
-//                os << std::scientific;
                 os << std::setw(w1) << magnification_(i, j);
                 os << std::setw(w1) << magnificationLaplace_(i, j);
                 os.precision(precHigh);
@@ -412,7 +409,6 @@ void SourcePlaneGrid::printData(std::ostream& os) const
 
         if (printZeros())
         {
-//            os << std::fixed;
             if (printIndexes())
             {
                 os << std::setw(intWidth) << i;
@@ -433,13 +429,16 @@ void SourcePlaneGrid::printData(std::ostream& os) const
                 os << std::setw(wWidth) << 0;
                 os << std::setw(wWidth) << 0;
                 os.precision(precOld);
-                os << std::setw(w1) << raysGnuplot;
-                os << std::setw(w1) << raysGnuplot;
+                os << std::setw(w1) << 0;
+                os << std::setw(w1) << 0;
+                os << std::setw(w) << "#zero";
                 os << std::endl;
             }
             else
             {
-                os << std::setw(intWidth) << raysGnuplot << std::endl;
+                os << std::setw(intWidth) << raysGnuplot;
+                os << std::setw(w) << "#zero";
+                os << std::endl;
             }
         }
 
@@ -477,13 +476,16 @@ void SourcePlaneGrid::printData(std::ostream& os) const
                 os << std::setw(wWidth) << 0;
                 os << std::setw(wWidth) << 0;
                 os.precision(precOld);
-                os << std::setw(w1) << raysGnuplot;
-                os << std::setw(w1) << raysGnuplot;
+                os << std::setw(w1) << 0;
+                os << std::setw(w1) << 0;
+                os << std::setw(w) << "#zero";
                 os << std::endl;
             }
             else
             {
-                os << std::setw(intWidth) << raysGnuplot << std::endl;
+                os << std::setw(intWidth) << raysGnuplot;
+                os << std::setw(w) << "#zero";
+                os << std::endl;
             }
         }
     }
