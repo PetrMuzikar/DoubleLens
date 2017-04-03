@@ -109,7 +109,7 @@ if (diffConf == 1) {
     load diffConfFile
 }
 
-set zrange [-cut:cut]
+#set zrange [-cut:cut]
 set cbrange [-cut:cut]
 
 if (cut == 1) {
