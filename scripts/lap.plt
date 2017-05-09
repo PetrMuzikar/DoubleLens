@@ -1,7 +1,6 @@
 #!/usr/bin/env gnuplot
 
 reset
-f="../nothing.dat"
 
 if (drawEps) {
     @EPS
@@ -39,7 +38,7 @@ load "colorbar.plt"
 set xlabel "{/Symbol b}_x"
 set ylabel "{/Symbol b}_y"
 set title "Relative difference between magnifications after the Laplace-correction for " . addtit
-splot f using 1:2:($$3-2) notitle
+splot -10 notitle
 
 unset multiplot
 unset out
