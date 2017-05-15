@@ -73,6 +73,8 @@ diffConfFile = basename . "-conf.plt"
 
 addtit = sprintf("m_1 = %g, d = %s, {/Symbol b} = %s", m1, d, beta)
 
+@EPS
+
 set view map
 set pm3d at t corners2color c1
 unset surface
@@ -82,64 +84,54 @@ set lmargin 0.1
 set bmargin 0.1
 set size 1.2, 1.2
 
-set xlabel "{/Symbol b}_x"
-set ylabel "{/Symbol b}_y"
-
-@EPS
-#set term postscript eps color solid enhanced
+absPlot = 1
+relPlot = 0
+if (diffConf == 1) {
+    load diffConfFile
+}
 
 set out outname
 set title "Absolute difference between magnifications for " . addtit
 load "diverging_map_gnuplot.pal"
-absPlot = 1
-relPlot = 0
-
-if (diffConf == 1) {
-    load diffConfFile
-}
 
 splot input using 3:4:(column(6)-column(11)) notitle with pm3d
 
-set out outname2
-set title "Relative difference between magnifications for " . addtit
+unset out
+
 absPlot = 0
 relPlot = 1
-
 if (diffConf == 1) {
     load diffConfFile
 }
 
-#set zrange [-cut:cut]
+set out outname2
+set title ""
+
+set multiplot
+
+set xrange [xmin:xmax]
+set yrange [ymin:ymax]
 set cbrange [-cut:cut]
 
-if (cut == 1) {
-    set cbtics ("-1" -1, "-0.1" -.8, "-0.01" -.6, "-0.001" -.4, "" -.2, \
-        "0" 0, "" .2, "0.001" .4, "0.01" .6, "0.1" .8, "1" 1)
-    set palette defined (-1 0 0 1, -.8 0.25 .25 1, -.6 .5 .5 1, \
-        -.4 .75 .75 1, -.2 "white", 0.2 "white", .4 1 0.89 .75, \
-        .6 1 0.77 .5, .8 1 0.66 .25, 1 1 0.55 0)
-} 
-if (cut == 0.1) {
-    set cbtics ("-0.1" -0.1, "-0.01" -.08, "-0.001" -.06, "-0.0001" -.04, \
-        "" -.02, "0" 0, "" .02, "0.0001" .04, "0.001" .06, "0.01" .08, \
-        "0.1" 0.1)
-    set palette defined (-0.1 0 0 1, -.08 0.25 .25 1, -.06 .5 .5 1, \
-        -.04 .75 .75 1, -.02 "white", 0.02 "white", .04 1 0.89 .75, \
-        .06 1 0.77 .5, .08 1 0.66 .25, 0.1 1 0.55 0)
-}
-if (cut == 0.01) {
-    set cbtics ("-0.01" -0.01, "-0.001" -.008, "-0.0001" -.006, \
-        "-1e-5" -.004, "" -.002, "0" 0, "" .002, "1e-5" .004, \
-        "0.0001" .006, "0.001" .008, "0.01" 0.01)
-    set palette defined (-0.01 0 0 1, -.008 0.25 .25 1, -.006 .5 .5 1, \
-        -.004 .75 .75 1, -.002 "white", 0.002 "white", .004 1 0.89 .75, \
-        .006 1 0.77 .5, .008 1 0.66 .25, 0.01 1 0.55 0)
-}
+load "coloring.plt"
 
 splot input using 3:4:((column(6)-column(11))/column(11)) notitle with pm3d
 
+zmin = GPVAL_Z_MIN
+zmax = GPVAL_Z_MAX
+set zrange [zmin:zmax]
+load "colorbar.plt"
+
+set xlabel "{/Symbol b}_x"
+set ylabel "{/Symbol b}_y"
+set title "Relative difference between magnifications for " . addtit
+
+#replot
+splot -10 notitle
+
+unset multiplot
 unset out
 
-# default terminal defined in the .gnuplot file
+# default terminal defined in the file .gnuplot
 @DEFAULT
 
