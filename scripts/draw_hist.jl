@@ -2,8 +2,9 @@
 
 using PyPlot;
 
-function draw_hist(files...; maxerr=0.1, nbins=100, suff="hist.eps", xrange=[], yrange=[])
-    bins = linspace(-maxerr, maxerr, nbins);
+function draw_hist(files...; maxi=0.1, nbins=100, suff="hist.eps", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
+
+    bins = linspace(-maxi, maxi, nbins);
 
     desc = "";
     if length(xrange) == 2
@@ -24,8 +25,16 @@ function draw_hist(files...; maxerr=0.1, nbins=100, suff="hist.eps", xrange=[], 
         fig += 1;
         p = readdlm(f);
         sel = p[:, 5] .>= 0;
-        r = p[sel, [3, 4, 10]];
-        sel = abs(r[:, 3]) .<= maxerr;
+        if fRow == nothing
+            r = p[sel, [3, 4, 10]];
+        else
+            r = mapslices(fRow, p[sel, :], 2);
+        end
+        if fSel != nothing
+            sel = vec(mapslices(fSel, r, 2));
+            r = r[sel, :];
+        end 
+        sel = abs(r[:, end]) .<= maxi;
         r = r[sel, :];
         if length(xrange) == 2
             sel = xrange[1] .<= r[:, 1] .<= xrange[2];
@@ -35,15 +44,15 @@ function draw_hist(files...; maxerr=0.1, nbins=100, suff="hist.eps", xrange=[], 
             sel = yrange[1] .<= r[:, 2] .<= yrange[2];
             r = r[sel, :];
         end
-        mu = mean(r[:,3]);
-        sigma = std(r[:,3]);
+        mu = mean(r[:,end]);
+        sigma = std(r[:,end]);
     
         figure(fig);
         clf();
-        plt[:hist](r[:,3], bins);
-        gca()[:set_xlim](-maxerr, maxerr);
-        xlabel("relative differences");
-        ylabel("counts");
+        plt[:hist](r[:,end], bins);
+        gca()[:set_xlim](-maxi, maxi);
+        xlabel(xlab);
+        ylabel(ylab);
         xl = gca()[:get_xlim]();
         yl = gca()[:get_ylim]();
         xx = xl[1] + (xl[2] - xl[1]) * 0.02;
