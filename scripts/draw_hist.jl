@@ -2,7 +2,7 @@
 
 using PyPlot;
 
-function draw_hist(files...; maxi=0.1, nbins=100, suff="hist.eps", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
+function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.eps", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
 
     bins = linspace(-maxi, maxi, nbins);
 
@@ -59,7 +59,7 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="hist.eps", xrange=[], yr
         yy = yl[1] + (yl[2] - yl[1]) * 0.98;
         ss = @sprintf("mu = %.3e\nsigma = %.3e\n%s", mu, sigma, desc);
         text(xx, yy, ss, verticalalignment="top");
-        epsf = replace(f, r"out.dat$", suff);
+        epsf = replace(f, r"-(out|diff).dat$", suff);
         savefig(epsf);
     end
 
