@@ -94,7 +94,7 @@ set out outname
 set title "Absolute difference between magnifications for " . addtit
 load "diverging_map_gnuplot.pal"
 
-splot input using 3:4:(column(6)-column(11)) notitle with pm3d
+splot input using 3:4:(column(11)-column(6)) notitle with pm3d
 
 unset out
 
@@ -115,7 +115,7 @@ set cbrange [-cut:cut]
 
 load "coloring.plt"
 
-splot input using 3:4:((column(6)-column(11))/column(11)) notitle with pm3d
+splot input using 3:4:((column(11)-column(6))/column(6)) notitle with pm3d
 
 zmin = GPVAL_Z_MIN
 zmax = GPVAL_Z_MAX
