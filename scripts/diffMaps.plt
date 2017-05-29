@@ -68,6 +68,7 @@ print "beta = " . beta
 
 outname = basename . "-abs.eps"
 outname2 = basename . "-rel.eps"
+outname3 = basename . "-rel2.eps"
 dataname = basename . ".dat"
 diffConfFile = basename . "-conf.plt"
 
@@ -86,6 +87,7 @@ set size 1.2, 1.2
 
 absPlot = 1
 relPlot = 0
+rel2Plot = 0
 if (diffConf == 1) {
     load diffConfFile
 }
@@ -100,6 +102,7 @@ unset out
 
 absPlot = 0
 relPlot = 1
+rel2Plot = 0
 if (diffConf == 1) {
     load diffConfFile
 }
@@ -130,6 +133,23 @@ set title "Relative difference between magnifications for " . addtit
 splot -10 notitle
 
 unset multiplot
+unset out
+
+unset zrange
+unset colorbox
+unset cbtics
+absPlot = 0
+relPlot = 0
+rel2Plot = 1
+if (diffConf == 1) {
+    load diffConfFile
+}
+load "col3.plt"
+
+set out outname3
+
+splot input using 3:4:((column(11)-column(6))/column(6)) notitle with pm3d
+
 unset out
 
 # default terminal defined in the file .gnuplot

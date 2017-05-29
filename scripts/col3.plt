@@ -14,6 +14,8 @@ mi = -ma
 
 #set zrange [mini:maxi]
 set cbrange [mini:maxi]
+set colorbox
+set cbtics
 set palette defined (mini "blue", mi "blue", mi "gray", ma "gray", ma "yellow", maxi "yellow")
 
 #set isosamples 100,100
