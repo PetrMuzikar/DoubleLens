@@ -109,6 +109,8 @@ do
     tol=${tol:-"0.05"}
     images=${images:-10000}
     
+    clean=${clean:-0}
+
     echo "outFileBaseName: ${outFileBaseName}"
     echo "random: ${random}"
     echo "integ: ${integ}"
@@ -118,6 +120,7 @@ do
     echo "tol: ${tol}"
     echo "images: ${images}"
     echo "pixels: ${pixels}"
+    echo "clean: ${clean}"
     
     echo "Computing images of source plane..."
     echo " $images" > $dataFile
@@ -168,7 +171,10 @@ do
         (( k++ ))
     done < "$domainsFile"
     
-    rm -rvf "${testFile}" "${dataFile}" "err.dat"
-    
+    if [ "$clean" -ne 0 ]
+    then
+        rm -rvf "${testFile}" "${dataFile}" "err.dat"
+    fi
+
     popd
 done
