@@ -109,7 +109,7 @@ do
     tol=${tol:-"0.05"}
     images=${images:-10000}
     
-    clean=${clean:-0}
+    clean=${clean:-1}
 
     echo "outFileBaseName: ${outFileBaseName}"
     echo "random: ${random}"
@@ -171,7 +171,7 @@ do
         (( k++ ))
     done < "$domainsFile"
     
-    if [ "$clean" -ne 0 ]
+    if [ "$clean" -eq 0 ]
     then
         rm -rvf "${testFile}" "${dataFile}" "err.dat"
     fi
