@@ -171,7 +171,7 @@ do
         (( k++ ))
     done < "$domainsFile"
     
-    if [ $clean -eq 0 ]
+    if [ $clean -eq 1 ]
     then
         rm -rvf "${testFile}" "${dataFile}" "err.dat"
     fi
