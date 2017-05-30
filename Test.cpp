@@ -475,6 +475,8 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     GravLens lens;
     SourcePlaneGrid spg;
     Int nPoints;
+    Int nBoundary;
+    PointNum step;
     Int w = 18;
     Int wi = 6;
 
@@ -518,6 +520,77 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     std::cout.precision(10);
 //    std::cout.width(18);
     std::cout.setf(std::ios::scientific);
+
+    nBoundary = Int(sqrt(nPoints));
+    step = diffGrid / nBoundary;
+
+    y = minGrid.y();
+    for (Int i = 0; i <= nBoundary; ++i)
+    {
+        x = minGrid.x() + step.x() * i;        
+        source = PointNum(x, y);
+        lens.images(source, images, absPrec, relPrec, remPrec);
+        for (UInt j = 0; j < images.size(); ++j)
+        {
+            std::cout << std::setw(w) << source.x();
+            std::cout << std::setw(w) << source.y();
+            std::cout << std::setw(w) << images[j].x();
+            std::cout << std::setw(w) << images[j].y();
+            std::cout << std::setw(wi) << images.size();
+            std::cout << std::endl;
+        }
+    }
+
+    y = maxGrid.y();
+    for (Int i = 0; i <= nBoundary; ++i)
+    {
+        x = minGrid.x() + step.x() * i;        
+        source = PointNum(x, y);
+        lens.images(source, images, absPrec, relPrec, remPrec);
+        for (UInt j = 0; j < images.size(); ++j)
+        {
+            std::cout << std::setw(w) << source.x();
+            std::cout << std::setw(w) << source.y();
+            std::cout << std::setw(w) << images[j].x();
+            std::cout << std::setw(w) << images[j].y();
+            std::cout << std::setw(wi) << images.size();
+            std::cout << std::endl;
+        }
+    }
+
+    x = minGrid.x();
+    for (Int i = 0; i <= nBoundary; ++i)
+    {
+        y = minGrid.y() + step.y() * i;        
+        source = PointNum(x, y);
+        lens.images(source, images, absPrec, relPrec, remPrec);
+        for (UInt j = 0; j < images.size(); ++j)
+        {
+            std::cout << std::setw(w) << source.x();
+            std::cout << std::setw(w) << source.y();
+            std::cout << std::setw(w) << images[j].x();
+            std::cout << std::setw(w) << images[j].y();
+            std::cout << std::setw(wi) << images.size();
+            std::cout << std::endl;
+        }
+    }
+
+    x = maxGrid.x();
+    for (Int i = 0; i <= nBoundary; ++i)
+    {
+        y = minGrid.y() + step.y() * i;        
+        source = PointNum(x, y);
+        lens.images(source, images, absPrec, relPrec, remPrec);
+        for (UInt j = 0; j < images.size(); ++j)
+        {
+            std::cout << std::setw(w) << source.x();
+            std::cout << std::setw(w) << source.y();
+            std::cout << std::setw(w) << images[j].x();
+            std::cout << std::setw(w) << images[j].y();
+            std::cout << std::setw(wi) << images.size();
+            std::cout << std::endl;
+        }
+    }
 
     for (Int i = 0; i < nPoints; ++i)
     {
