@@ -521,6 +521,27 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
 //    std::cout.width(18);
     std::cout.setf(std::ios::scientific);
 
+    for (Int i = 0; i < nPoints; ++i)
+    {
+        gsl_qrng_get(q, point);
+        x = minGrid.x() + diffGrid.x() * point[0];
+        y = minGrid.y() + diffGrid.y() * point[1];
+        source = PointNum(x, y);
+        lens.images(source, images, absPrec, relPrec, remPrec);
+
+        for (UInt j = 0; j < images.size(); ++j)
+        {
+            std::cout << std::setw(w) << source.x();
+            std::cout << std::setw(w) << source.y();
+            std::cout << std::setw(w) << images[j].x();
+            std::cout << std::setw(w) << images[j].y();
+            std::cout << std::setw(wi) << images.size();
+            std::cout << std::endl;
+        }
+    }
+
+    std::cout << prefix << "Points on the rectangle:\n";
+
     nBoundary = Int(sqrt(nPoints));
     step = diffGrid / nBoundary;
 
@@ -581,25 +602,6 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
         y = minGrid.y() + step.y() * i;        
         source = PointNum(x, y);
         lens.images(source, images, absPrec, relPrec, remPrec);
-        for (UInt j = 0; j < images.size(); ++j)
-        {
-            std::cout << std::setw(w) << source.x();
-            std::cout << std::setw(w) << source.y();
-            std::cout << std::setw(w) << images[j].x();
-            std::cout << std::setw(w) << images[j].y();
-            std::cout << std::setw(wi) << images.size();
-            std::cout << std::endl;
-        }
-    }
-
-    for (Int i = 0; i < nPoints; ++i)
-    {
-        gsl_qrng_get(q, point);
-        x = minGrid.x() + diffGrid.x() * point[0];
-        y = minGrid.y() + diffGrid.y() * point[1];
-        source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
-
         for (UInt j = 0; j < images.size(); ++j)
         {
             std::cout << std::setw(w) << source.x();
