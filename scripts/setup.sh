@@ -65,14 +65,13 @@ do
     confFile="${outFileBaseName}-conf.sh"
     outFile="${outFileBaseName}-out.dat"
     domainsFile="${outFileBaseName}-domains.dat"
-    testFileBaseName="test"
-    testFile="${testFileBaseName}.dat"
+    testFile="${outFileBaseName}-test.dat"
     testImagesFile="${outFileBaseName}-images.dat"
-    dataFile="data.dat"
+    dataFile="${outFileBaseName}-data.dat"
     plotMaps="maps.plt"
     plotFile="${outFileBaseName}-plot.plt"
     plotConfFile="${outFileBaseName}-conf.plt"
-    inWorkFile="inWork.dat"
+    inWorkFile="${outFileBaseName}-inWork.dat"
     
     #if [ ! -d "$d" ]
     #then
