@@ -85,8 +85,8 @@ do
     pixelsFile="${d}/${outFileBaseName}-pixels.dat"
     pixelsPlotFile="${d}/${outFileBaseName}-pixels.plt"
     pixelsPlotEps="${d}/${outFileBaseName}-pixels.eps"
-    inWorkFile="${d}/inWork.dat"
-    numRaysFile="${d}/numRays.dat"
+    inWorkFile="${d}/${outFileBaseName}-inWork.dat"
+    numRaysFile="${d}/${outFileBaseName}-numRays.dat"
     #testFileBaseName="test"
     #testFile="${testFileBaseName}.dat"
     #dataFile="data.dat"
@@ -128,6 +128,8 @@ do
     raysGroup=${raysGroup:-50000000}
     tol=${tol:-"0.05"}
     images=${images:-10000}
+
+    clean=${clean:-1}
     
     echo "outFileBaseName: ${outFileBaseName}"
     echo "random: ${random}"
@@ -138,6 +140,7 @@ do
     echo "tol: ${tol}"
     echo "images: ${images}"
     echo "pixels: ${pixels}"
+    echo "clean: ${clean}"
     
     #prefix="${HOME}/Lensing/DoubleLens"
     choice=$(( integ + 2 * random ))
@@ -168,7 +171,6 @@ do
         tac "$f" | awk '/error=/{e = $3; next;} /outside=/{o = $3; next;} /inside=/{i = $3; next;} /rays=/{r = $3; exit;} END{ printf("%15d %15d %15d %15d\n", r, i, o, e);}' >> "$numRaysFile"
     done
     rr=$(awk '/^$|^#/{next;} {r += $1; e += $4;} END{print r-e;}' "$numRaysFile")
-    #tail -n 3 "$testImagesFile" | awk 'BEGIN{r=0;s=0} /^# rays=/{r = $3} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e %d ", s, s, r)}' > $inWorkFile 
     tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
     echo "$rr " >> "$inWorkFile"
     # where to start a Sobol or Halton sequence, random seed
@@ -228,8 +230,11 @@ do
 
     popd
     
-    echo "Removing files..."
-    rm -vf "${inWorkFile}"
-    rm -vf "${numRaysFile}"
-    rm -vf "${files[@]}"
+    if [ $clean -eq 1 ]
+    then
+        echo "Removing files..."
+        rm -vf "${inWorkFile}"
+        rm -vf "${numRaysFile}"
+        rm -vf "${files[@]}"
+    fi
 done 

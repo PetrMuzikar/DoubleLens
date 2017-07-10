@@ -71,7 +71,6 @@ do
     plotMaps="maps.plt"
     plotFile="${outFileBaseName}-plot.plt"
     plotConfFile="${outFileBaseName}-conf.plt"
-    inWorkFile="${outFileBaseName}-inWork.dat"
     
     #if [ ! -d "$d" ]
     #then
