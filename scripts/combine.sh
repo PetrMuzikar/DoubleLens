@@ -230,11 +230,11 @@ do
 
     popd
     
+    echo "Removing files..."
+    rm -vf "${files[@]}"
     if [ $clean -eq 1 ]
     then
-        echo "Removing files..."
         rm -vf "${inWorkFile}"
         rm -vf "${numRaysFile}"
-        rm -vf "${files[@]}"
     fi
 done 
