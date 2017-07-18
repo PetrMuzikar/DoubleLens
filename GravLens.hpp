@@ -17,21 +17,23 @@ class GravLens
 
 public:
     GravLens() : M_M_Sun_(1.0), mu1_(0.5), Dskpc_(10.0), d_(1.0), d1_(0.5), beta_(0.1),
-        nrE_(500), prec_(1e-5)
+        nrE_(500), prec_(1e-5), absPrec_(1e-9), relPrec_(1e-9), remPrec_(1e-5)
     {
         recalcDependentParams();
     }
 
-    GravLens(Num M_M_Sun, Num mu1, Num Dskpc, Num d, Num d1, Num beta, Num nrE, Num prec) :
-        M_M_Sun_(M_M_Sun), mu1_(mu1), Dskpc_(Dskpc), d_(d), d1_(d1), beta_(beta), nrE_(nrE), prec_(prec)
+    GravLens(Num M_M_Sun, Num mu1, Num Dskpc, Num d, Num d1, Num beta, Num
+nrE, Num prec, Num absPrec = 1e-9, Num relPrec = 1e-9, Num remPrec = 1e-5) :
+        M_M_Sun_(M_M_Sun), mu1_(mu1), Dskpc_(Dskpc), d_(d), d1_(d1),
+beta_(beta), nrE_(nrE), prec_(prec), absPrec_(absPrec), relPrec_(relPrec),
+remPrec_(remPrec)
     {
         recalcDependentParams();
     }
 
     GravLens(const GravLens& gl) : M_M_Sun_(gl.M_M_Sun_), mu1_(gl.mu1_), Dskpc_(gl.Dskpc_),
-        d_(gl.d_), d1_(gl.d1_), beta_(gl.beta_), nrE_(gl.nrE_), prec_(gl.prec_)
+        d_(gl.d_), d1_(gl.d1_), beta_(gl.beta_), nrE_(gl.nrE_), prec_(gl.prec_), absPrec_(gl.absPrec_), relPrec_(gl.relPrec_), remPrec_(gl.remPrec_)
     {
-
         recalcDependentParams();
     }
 
@@ -52,6 +54,9 @@ public:
         beta_ = gl.beta_;
         nrE_ = gl.nrE_;
         prec_ = gl.prec_;
+        absPrec_ = gl.absPrec_;
+        relPrec_ = gl.relPrec_;
+        remPrec_ = gl.remPrec_;
 
         recalcDependentParams();
 
@@ -74,12 +79,12 @@ public:
     PointNum rayInteg(const PointNum& init);
     PointNum raySimple(const PointNum& init) const;
 
-    void images(const PointNum& y, VecPointNum& images, const Num absPrec=1e-8, const Num relPrec=1e-8, const Num remPrec=1e-4) const
+    void images(const PointNum& y, VecPointNum& images) const
     {
         CNum yy(y.x(), y.y());
         CNum z[6];
         Int n;
-        imagesComplex(yy, z, n, absPrec, relPrec, remPrec);
+        imagesComplex(yy, z, n);
         images.resize(n);
         for (Int i = 0; i < n; ++i)
         {
@@ -93,7 +98,7 @@ public:
         return jacComplex(xx);
     }
 
-    Num magSimple(const PointNum& b, const Num absPrec=1e-8, const Num relPrec=1e-8, const Num remPrec=1e-4) const;
+    Num magSimple(const PointNum& b) const;
 
     Num magExpr(const PointNum& b) const;
 
@@ -129,6 +134,9 @@ private:
                     // from the second lens to the end of the integration domain
     Num nrE_;
     Num prec_;      // local precision of the integration procedure
+    Num absPrec_;   // absolute precision of the polynomial solver
+    Num relPrec_;   // relative precision of the polynomial solver
+    Num remPrec_;   // precision for accepting the root as physical
 
     Num d2_;        // relative distance beween the observer and the second lens
 
@@ -179,8 +187,7 @@ private:
     Num jacComplex(const CNum x) const;
 
     void xCoeff(const CNum y, CNum coeff[], Int& deg) const;
-    void imagesComplex(const CNum y, CNum images[], Int& nRoots, const Num absPrec=1e-8,
-        const Num relPrec=1e-8, const Num remPrec=1e-4) const;
+    void imagesComplex(const CNum y, CNum images[], Int& nRoots) const;
 
 };
 

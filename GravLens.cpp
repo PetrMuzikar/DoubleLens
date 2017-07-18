@@ -589,8 +589,7 @@ void GravLens::xCoeff(const CNum yy, CNum coeff[], Int& deg) const
 #endif
 }
 
-void GravLens::imagesComplex(const CNum y, CNum images[], Int& nRoots, const Num absPrec, const Num relPrec,
-    const Num remPrec) const
+void GravLens::imagesComplex(const CNum y, CNum images[], Int& nRoots) const
 {
     // The origin of the reference frame is the geometric centre between the lenses.
 
@@ -644,7 +643,7 @@ void GravLens::imagesComplex(const CNum y, CNum images[], Int& nRoots, const Num
 
 	try
 	{
-        pcs.roots(absPrec, relPrec, PolyCNumSolver::DURAND_KERNER, roots);
+        pcs.roots(absPrec_, relPrec_, PolyCNumSolver::DURAND_KERNER, roots);
         //pcs.roots(prec, prec, PolyCNumSolver::DURAND_KERNER, roots);
 //        pcs.roots(prec, prec, PolyCNumSolver::COMBINED, roots);
         //pcs.roots(absPrec, relPrec, PolyCNumSolver::LEHMER_SCHUR, roots);
@@ -685,7 +684,7 @@ void GravLens::imagesComplex(const CNum y, CNum images[], Int& nRoots, const Num
 #ifdef PRINT_ROOTS
 		std::cout << std::setw(15) << abs(rem) << std::endl;
 #endif
-		if (abs(rem) < remPrec)
+		if (abs(rem) < remPrec_)
 		{
 	  		images[j] = x;
 	  		j++;
@@ -776,7 +775,7 @@ Num GravLens::magExpr(const PointNum& b) const
     return A;
 }
 
-Num GravLens::magSimple(const PointNum& b, const Num absPrec, const Num relPrec, const Num remPrec) const
+Num GravLens::magSimple(const PointNum& b) const
 {
     using std::abs;
 
@@ -802,7 +801,7 @@ Num GravLens::magSimple(const PointNum& b, const Num absPrec, const Num relPrec,
     Int n;
 	Num A = 0.0;
 
-    imagesComplex(y, roots, n, absPrec, relPrec, remPrec);
+    imagesComplex(y, roots, n);
 
 	for (Int i = 0; i < n; ++i)
 	{
@@ -852,7 +851,11 @@ std::ostream& operator<<(std::ostream& os, const GravLens& l)
 #else
     os << l.prefix_ << "    x^{(2)}_{m_2} = d - m_1 * beta / d = " << l.d_ - l.m1_ * l.beta_ / l.d_ << std::endl;
 #endif
-    os << l.prefix_ << "    precision = " << l.prec_ << std::endl;
+    os << l.prefix_ << "    integration: prec = " << l.prec_ << std::endl;
+    os << l.prefix_ << "    polynomial solver:\n";
+    os << l.prefix_ << "      absPrec = " << l.absPrec_ << std::endl;
+    os << l.prefix_ << "      relPrec = " << l.relPrec_ << std::endl;
+    os << l.prefix_ << "      remPrec = " << l.remPrec_ << std::endl;
     os << l.prefix_ << "    number of lenses = " << l.numOfLenses_ << std::endl;
     os << l.prefix_ << "    lenses:\n";
     os << l.prefix_ << "    " << std::setw(wid2) << "coords";
@@ -868,41 +871,6 @@ std::ostream& operator<<(std::ostream& os, const GravLens& l)
         }
     }
 
-//    if (l.initializedIC_)
-//    {
-//
-//        os << l.prefix_ << "\n    Initial conditions:\n";
-//        os << l.prefix_ << "    r = ( ";
-//        for (int i = 0; i < 3; ++i)
-//        {
-//            os << std::setw(15) << l.initCond_[i];
-//        }
-//        os << ")\n";
-//        os << l.prefix_ << "    v = ( ";
-//        for (int i = 3; i < 6; ++i)
-//        {
-//            os << std::setw(15) << l.initCond_[i];
-//        }
-//        os << ")";
-//    }
-//
-//    if (l.computedFC_)
-//    {
-//        os << l.prefix_ << "\n    Final conditions:\n";
-//        os << l.prefix_ << "    r = ( ";
-//        for (int i = 0; i < 3; ++i)
-//        {
-//            os << std::setw(15) << l.finishCond_[i];
-//        }
-//        os << ")\n";
-//        os << l.prefix_ << "    v = ( ";
-//        for (int i = 3; i < 6; ++i)
-//        {
-//            os << std::setw(15) << l.finishCond_[i];
-//        }
-//        os << ")";
-//    }
-
     os << std::flush;
 
     return os;
@@ -912,6 +880,7 @@ std::istream& operator>>(std::istream& is, GravLens& gl)
 {
     is >> gl.M_M_Sun_ >> gl.mu1_ >> gl.Dskpc_ >> gl.d_;
     is >> gl.d1_ >> gl.beta_ >> gl.nrE_ >> gl.prec_;
+    is >> gl.absPrec_ >> gl.relPrec_ >> gl.remPrec_;
 
     gl.recalcDependentParams();
 
@@ -929,7 +898,10 @@ std::string GravLens::printInput() const
     ss << d1_ << " ";
     ss << beta_ << " ";
     ss << nrE_ << " ";
-    ss << prec_;
+    ss << prec_ << " ";
+    ss << absPrec_ << " ";
+    ss << relPrec_ << " ";
+    ss << remPrec_ << " ";
 
     return ss.str();
 }

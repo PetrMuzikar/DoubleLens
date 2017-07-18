@@ -13,254 +13,6 @@
 #include "InverseRayShooting.hpp"
 #include "Test.hpp"
 
-void testVec()
-{
-    using namespace ML;
-
-    {
-
-        Vec<Num> v1;
-        Vec<Num> v2(3);
-        Num data[] = {1, 2, 3};
-        Vec<Num> v3(3, data);
-        Vec<Num> v4(v3);
-        Vec<Num> v5, v6(3);
-
-        v5 = v4;
-
-        std::cout << v5 << std::endl;
-
-//        std::cin >> v6;
-//        std::cout << v6 << std::endl;
-
-    }
-
-    {
-        SVec<Num,3> v1;
-        Num data[] = {1, 2, 3};
-        SVec<Num,3> v3(data);
-        SVec<Num,3> v4(v3);
-        SVec<Num,3> v5, v6;
-
-        v5 = v4;
-
-        std::cout << v5 << std::endl;
-        std::cout << std::endl;
-
-//        std::cin >> v6;
-//        std::cout << v6 << std::endl;
-
-    }
-
-    {
-
-        Mat<Num> v1;
-        Mat<Num> v2(3,3);
-        Num data[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        Mat<Num> v3(3, 3, data);
-        Mat<Num> v4(v3);
-        Mat<Num> v5, v6(3,3);
-
-        v5 = v4;
-        v5(1,1) = v5(2,2);
-        v5[0][0] = v5[1][1];
-
-        std::cout << v5 << std::endl;
-
-//        std::cin >> v6;
-//        std::cout << v6 << std::endl;
-
-    }
-
-    {
-
-        SMat<Num,3,3> v2;
-        Num data[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        SMat<Num,3,3> v3(data);
-        SMat<Num,3,3> v4(v3);
-        SMat<Num,3,3> v5, v6;
-
-        v5 = v4;
-        v5(1,1) = v5(2,2);
-        v5[0][0] = v5[1][1];
-
-        std::cout << v5 << std::endl;
-
-//        std::cin >> v6;
-//        std::cout << v6 << std::endl;
-
-    }
-
-    {
-        std::cout << Pow<0>::of(2) << std::endl;
-        std::cout << Pow<1>::of(2) << std::endl;
-        std::cout << Pow<2>::of(2) << std::endl;
-        std::cout << Pow<3>::of(2) << std::endl;
-        std::cout << Pow<4>::of(2) << std::endl;
-        std::cout << Pow<10>::of(2) << std::endl;
-        std::cout << QUI(2) << std::endl;
-    }
-
-    {
-        PolyCNum p1;
-        PolyCNum p2(4);
-        CNum p[] = {-32, 112, -184, 180, -112, 44, -10, 1};
-        PolyCNum p3(sizeof(p) / sizeof(p[0]), p);
-        PolyCNum p4(p3);
-        PolyCNum p5;
-
-        p5 = p4;
-
-        std::cout << p5 << std::endl;
-        std::cout << p5(2) << std::endl;
-
-        try
-        {
-            VecCNum roots(p5.degree());
-            PolyCNumSolver pcs(p5);
-            Num absPrec = 1e-8;
-            Num relPrec = absPrec;
-
-            pcs.roots(absPrec, relPrec, PolyCNumSolver::LEHMER_SCHUR, roots);
-            std::cout << roots << std::endl;
-
-            pcs.roots(absPrec, relPrec, PolyCNumSolver::DURAND_KERNER, roots);
-            std::cout << roots << std::endl;
-
-            pcs.roots(absPrec, relPrec, PolyCNumSolver::COMBINED, roots);
-            std::cout << roots << std::endl;
-        }
-        catch (const std::exception& ex)
-        {
-            std::cerr << ex.what() << std::endl;
-        }
-    }
-}
-
-void testLens()
-{
-    GravLens gl0;
-    std::cout << gl0 << std::endl;
-
-    GravLens gl1(1, 0.5, 10, 1, 0.5, 0.01, 1e-6, 1e-5);
-    std::cout << gl1 << std::endl;
-
-    std::cin >> gl0;
-    std::cout << gl0 << std::endl;
-}
-
-void testInteg()
-{
-    GravLens gl;
-
-    std::cin >> gl;
-    std::cout << gl << std::endl;
-
-    PointNum in(0.24, 0.01);
-    PointNum out = gl.rayInteg(in);
-    PointNum outSimple = gl.raySimple(in);
-    std::cout << "Incident ray: " << in << std::endl;
-    std::cout << "Deflected ray (integration): " << out << std::endl;
-    std::cout << "Deflected ray (analytic):    " << outSimple << std::endl;
-    std::cout << std::endl;
-}
-
-void testImages()
-{
-    Int w1 = 30;
-    Int w2 = 20;
-    GravLens gl1(1, 0.5, 10, 1, 0.5, 0.01, 1e-6, 1e-5);
-    std::cout << gl1 << std::endl;
-
-    PointNum src(-1, 2);
-    VecPointNum images;
-    gl1.images(src, images);
-    std::cout << "Source: " << src << std::endl;
-    std::cout << std::setw(w1) << "Images";
-    std::cout << std::setw(w2) << "Source";
-    std::cout << std::setw(w2) << "Jacobian" << std::endl;
-    for (UInt i = 0; i < images.size(); ++i)
-    {
-        std::cout << std::setw(w1) << images[i].toC();
-        std::cout << std::setw(w2) << gl1.raySimple(images[i]).toC();
-        std::cout << std::setw(w2) << gl1.jac(images[i]) << std::endl;
-    }
-    std::cout << "Magnification: " << gl1.magSimple(src) << std::endl;
-}
-
-void testSPG()
-{
-    SourcePlaneGrid spg;
-    std::cin >> spg;
-    spg.printIndexes(true);
-    std::cout << spg << std::endl;
-}
-
-void testIRS()
-{
-    InverseRayShooting<GravLens> irs;
-    std::cin >> irs;
-    std::cout << irs << std::endl;
-}
-
-void testSetup()
-{
-//    testInputRays();
-    testInteg();
-    testSPG();
-}
-
-void testML()
-{
-    CNum a[] = {1, -1, -4, 6, 1, -5, 2};
-    const Int N = sizeof(a) / sizeof(a[0]);
-    ML::PolyCNum p(N, a);
-//    p.reverse();
-//    std::cout << p << std::endl;
-
-    ML::PolyCNumSolver ps(p);
-    Num relPrec = 1e-8;
-    Num absPrec = 1e-8;
-    ML::VecCNum r(N-1);
-
-//    try
-//    {
-//        ps.roots(absPrec, relPrec, ML::PolyCNumSolver::DURAND_KERNER, r);
-//    }
-//    catch (std::exception& ex)
-//    {
-//        std::cerr << ex.what() << std::endl;
-//    }
-//    std::cout << r << std::endl;
-
-//    CNum b = exp(2.0 * I);
-//    std::cout << b << std::endl;
-    try
-    {
-        ps.roots(absPrec, relPrec, ML::PolyCNumSolver::COMBINED, r);
-    }
-    catch (std::exception& ex)
-    {
-        std::cerr << "# " << ex.what() << std::endl;
-    }
-    std::cout << "# " << r << std::endl;
-
-//    try
-//    {
-//        ps.roots(absPrec, relPrec, ML::PolyCNumSolver::COMBINED, r);
-//    }
-//    catch (std::exception& ex)
-//    {
-//        std::cerr << ex.what() << std::endl;
-//    }
-//    std::cout << r << std::endl;
-//    for (Int i = 0; i < N; ++i)
-//    {
-//        std::cout << r[i] << 
-//    }
-
-}
-
 void debugRaysToPixel(const std::string& prefix)
 {
     InverseRayShooting<GravLens> irs;
@@ -277,7 +29,7 @@ void debugRaysToPixel(const std::string& prefix)
     {
         PointNum coords = it->coords_;
         VecPointNum images;
-        lens.images(coords, images, 0, 1e-8);
+        lens.images(coords, images);
         PointNum image, source;
         Int w = 15;
         Num jac;
@@ -371,7 +123,7 @@ void debug(const std::string& prefix)
 //        CNum y = bads[i].toC();
         VecPointNum images;
         PointNum y = bads[i];
-        lens.images(y, images, 0, 1e-8);
+        lens.images(y, images);
         PointNum image, source;
         Num jac;
         std::cout << "# nRoots: " << images.size() << std::endl;
@@ -477,8 +229,13 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     Int nPoints;
     Int nBoundary;
     PointNum step;
-    Int w = 18;
+    Int w = 20;
     Int wi = 6;
+    //Num absPrec = 1e-8;
+    //Num absPrec = 1e-9;
+    //Num relPrec = absPrec;
+    ////Num remPrec = 5e-6;
+    //Num remPrec = 1e-5;
 
     // argv >= 4
     if (argc >= 5)
@@ -500,10 +257,6 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     std::cin >> lens;
     std::cin >> spg;
 
-//    std::cout << nPoints << std::endl;
-//    std::cout << lens << std::endl;
-//    std::cout << spg << std::endl;
-
     gsl_qrng* q = gsl_qrng_alloc(gsl_qrng_sobol, 2);
     Num point[2], x, y;
     PointNum minGrid = spg.minGrid();
@@ -511,14 +264,8 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     PointNum diffGrid = maxGrid - minGrid;
     PointNum source;
     VecPointNum images;
-    //Num absPrec = 1e-8;
-    Num absPrec = 1e-9;
-    Num relPrec = absPrec;
-    //Num remPrec = 5e-6;
-    Num remPrec = 1e-5;
 
-    std::cout.precision(10);
-//    std::cout.width(18);
+    std::cout.precision(12);
     std::cout.setf(std::ios::scientific);
 
     for (Int i = 0; i < nPoints; ++i)
@@ -527,7 +274,7 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
         x = minGrid.x() + diffGrid.x() * point[0];
         y = minGrid.y() + diffGrid.y() * point[1];
         source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
+        lens.images(source, images);
 
         for (UInt j = 0; j < images.size(); ++j)
         {
@@ -550,7 +297,7 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     {
         x = minGrid.x() + step.x() * i;        
         source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
+        lens.images(source, images);
         for (UInt j = 0; j < images.size(); ++j)
         {
             std::cout << std::setw(w) << source.x();
@@ -567,7 +314,7 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     {
         x = minGrid.x() + step.x() * i;        
         source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
+        lens.images(source, images);
         for (UInt j = 0; j < images.size(); ++j)
         {
             std::cout << std::setw(w) << source.x();
@@ -584,7 +331,7 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     {
         y = minGrid.y() + step.y() * i;        
         source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
+        lens.images(source, images);
         for (UInt j = 0; j < images.size(); ++j)
         {
             std::cout << std::setw(w) << source.x();
@@ -601,7 +348,7 @@ void imageOfSourcePlane(int argc, char* argv[], const std::string& prefix)
     {
         y = minGrid.y() + step.y() * i;        
         source = PointNum(x, y);
-        lens.images(source, images, absPrec, relPrec, remPrec);
+        lens.images(source, images);
         for (UInt j = 0; j < images.size(); ++j)
         {
             std::cout << std::setw(w) << source.x();
@@ -776,6 +523,7 @@ void magPoint(int argc, char* argv[], const std::string& prefix)
     std::cin.rdbuf(inf.rdbuf());
 
     std::cin >> g;
+
     g.setOutputPrefix(prefix);
 
     std::cout << g << std::endl;
@@ -793,7 +541,7 @@ void magPoint(int argc, char* argv[], const std::string& prefix)
     }
 
     PointNum source;
-    Int w = 18;
+    Int w = 20;
     Int wi = 8;
     std::cout << prefix;
     std::cout << std::setw(w-prefix.length()) << "xS";
@@ -805,6 +553,7 @@ void magPoint(int argc, char* argv[], const std::string& prefix)
     std::cout << std::setw(wi) << "nImages";
     std::cout << std::endl;
     std::cout << std::scientific;
+    std::cout.precision(12);
     while (inf >> source)
     {
         VecPointNum images;

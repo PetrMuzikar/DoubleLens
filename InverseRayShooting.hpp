@@ -184,9 +184,6 @@ void InverseRayShooting<Lens>::computeMagnification()
     LLInt total = ir_.getNumRays() - spg_.error();
     spg_.ifComputeMagnification(true);
     Num normF = this->norm();
-    Num absPrec = 1e-8;
-    Num relPrec = absPrec;
-    Num remPrec = 1e-5;
 
     if (total == 0)
     {
@@ -195,7 +192,7 @@ void InverseRayShooting<Lens>::computeMagnification()
             for (Int j = 0; j < spg_.nGrid().y(); ++j)
             {
                 //spg_.magnificationSimple(i, j) = lens_.magSimple(spg_.beta(i, j));
-                spg_.magnificationSimple(i, j) = lens_.magSimple(spg_.beta(i, j), absPrec, relPrec, remPrec);
+                spg_.magnificationSimple(i, j) = lens_.magSimple(spg_.beta(i, j));
                 spg_.magnificationExpr(i, j) = lens_.magExpr(spg_.beta(i, j));
             }
         }
