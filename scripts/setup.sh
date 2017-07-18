@@ -72,12 +72,6 @@ do
     plotFile="${outFileBaseName}-plot.plt"
     plotConfFile="${outFileBaseName}-conf.plt"
     
-    #if [ ! -d "$d" ]
-    #then
-    #    mkdir "$d"
-    #    mv "${outFileBaseName}"-*\.*(dat|sh|plt) "$d" || exit 1
-    #fi
-    
     pushd "$d"
     
     if [ -r "$inFile" ]
@@ -106,6 +100,9 @@ do
     raysGroup=${raysGroup:-50000000}
     tol=${tol:-"0.1"}
     images=${images:-10000}
+    #absPrec=${absPrec:-1e-9}
+    #relPrec=${relPrec:-1e-9}
+    #remPrec=${remPrec:-1e-5}
     
     clean=${clean:-1}
 
@@ -117,11 +114,16 @@ do
     echo "raysGroup: ${raysGroup}"
     echo "tol: ${tol}"
     echo "images: ${images}"
+    echo "Polynomial solver:"
+    #echo "  absPrec: ${absPrec}"
+    #echo "  relPrec: ${relPrec}"
+    #echo "  remPrec: ${remPrec}"
     echo "pixels: ${pixels}"
     echo "clean: ${clean}"
     
     echo "Computing images of source plane..."
-    echo " $images" > $dataFile
+    echo "$images " > $dataFile
+    #echo "$images $absPrec $relPrec $remPrec" > $dataFile
     cat $inFile >> $dataFile
     ${DOUBLE_LENS_EXEC} i ${testFile} ${dataFile} || exit 1
     

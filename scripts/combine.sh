@@ -126,7 +126,7 @@ do
     radius=${radius:-1}
     rays=${rays:-100000000}
     raysGroup=${raysGroup:-50000000}
-    tol=${tol:-"0.05"}
+    tol=${tol:-"0.1"}
     images=${images:-10000}
 
     clean=${clean:-1}
