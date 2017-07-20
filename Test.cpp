@@ -492,9 +492,18 @@ void rays(int argc, char* argv[], const std::string& prefix)
     std::cout << std::setw(w) << "yInteg";
     std::cout << std::endl << std::scientific;
     std::cout.precision(10);
+
     while (std::cin >> init)
     {
-        integ = g.rayInteg(init);
+        try
+        {
+            integ = g.rayInteg(init);
+        }
+        catch (IntegrationException& ex)
+        {
+            std::cerr << ex.what() << std::endl;
+            continue;
+        }
         simple = g.raySimple(init);
         std::cout << std::setw(w) << init.x();
         std::cout << std::setw(w) << init.y();
