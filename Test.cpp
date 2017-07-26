@@ -491,7 +491,7 @@ void rays(int argc, char* argv[], const std::string& prefix)
     std::cout << std::setw(w) << "xInteg";
     std::cout << std::setw(w) << "yInteg";
     std::cout << std::endl << std::scientific;
-    std::cout.precision(10);
+    std::cout.precision(12);
 
     while (std::cin >> init)
     {
