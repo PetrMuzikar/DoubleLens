@@ -557,6 +557,7 @@ void magPoint(int argc, char* argv[], const std::string& prefix)
     std::cout << std::setw(w) << "yS";
     std::cout << std::setw(w) << "xImage";
     std::cout << std::setw(w) << "yImage";
+    std::cout << std::setw(w) << "rem";
     std::cout << std::setw(w) << "jac";
     std::cout << std::setw(w) << "1 / jac";
     std::cout << std::setw(wi) << "nImages";
@@ -572,16 +573,18 @@ void magPoint(int argc, char* argv[], const std::string& prefix)
         for (Int i = 0; i < nImages; ++i)
         {
             Num jac = g.jac(images[i]);
+            Num rem = abs(source - g.raySimple(images[i]));
             std::cout << std::setw(w) << source.x();
             std::cout << std::setw(w) << source.y();
             std::cout << std::setw(w) << images[i].x();
             std::cout << std::setw(w) << images[i].y();
+            std::cout << std::setw(w) << rem;
             std::cout << std::setw(w) << jac;
             std::cout << std::setw(w) << 1.0 / jac;
             std::cout << std::setw(wi) << nImages;
             std::cout << std::endl;
         }
-        std::cout << prefix << "mag= " << std::setw(6*w-5-prefix.length()) << mag;
+        std::cout << prefix << "mag= " << std::setw(7*w-5-prefix.length()) << mag;
         std::cout << std::endl;
     }
 
