@@ -114,7 +114,7 @@ do
     echo "raysGroup: ${raysGroup}"
     echo "tol: ${tol}"
     echo "images: ${images}"
-    echo "Polynomial solver:"
+    #echo "Polynomial solver:"
     #echo "  absPrec: ${absPrec}"
     #echo "  relPrec: ${relPrec}"
     #echo "  remPrec: ${remPrec}"
