@@ -1,6 +1,6 @@
 #!/bin/bash
 
-INFO="./info.awk"
+INFO=$(which "info.awk")
 if [ ! -x "$INFO" ]
 then
     echo "The script $INFO is not executable."
@@ -10,8 +10,8 @@ fi
 for d in $@
 do
     [ -d "$d" ] || continue
-    #echo "Folder: $d"
-    dataFile="${d}/${d}.dat"
+    pushd "$d" > /dev/null
+    dataFile="${d}.dat"
     if [ ! -r "$dataFile" ]
     then
         echo "$dataFile is not readable!"
@@ -19,5 +19,7 @@ do
     fi
    
     "$INFO" "$dataFile" || exit 
+    echo ""
+    popd > /dev/null
 done
 

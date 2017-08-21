@@ -10,20 +10,52 @@ BEGIN {
 }
 
 /##/ {
+    MMS = $10;
+    d1 = $11;
+    Ds = $12;
     d = $13;
     mu1 = $14;
     beta = $15;
     nrE = $16;
     prec = $17;
-    xMin = $18;
-    xMax = $19;
-    nx = $20;
-    yMin = $21;
-    yMax = $22;
-    ny = $23;
+    absPrec = $18;
+    relRrec = $19;
+    remPrec = $20;
+    xMin = $21;
+    xMax = $22;
+    nx = $23;
+    yMin = $24;
+    yMax = $25;
+    ny = $26;
 
     m1 = mu1 / (mu1 + (1 - mu1) * (1 - beta));
 
+    next;
+}
+
+/rectangular pixels/ {
+    px = $4;
+    py = $6; 
+    next;
+}
+
+/# rays=/ {
+    rays = $3;
+    next;
+}
+
+/# inside=/ {
+    inside = $3;
+    next;
+}
+
+/# outside=/ {
+    outside = $3;
+    next;
+}
+
+/# error=/ {
+    error = $3;
     next;
 }
 
@@ -34,6 +66,7 @@ BEGIN {
 
 /# total time/ {
     time = $7;
+    next;
 }
 
 /^#/ {
@@ -51,12 +84,24 @@ BEGIN {
 }
 
 END {
-    printf("mu1 = %g\n", mu1);
-    printf("m1 = %g\n", m1);
+    printf("file = %s\n", ARGV[1]);
     printf("d = %g\n", d);
     printf("beta = %g\n", beta);
+    printf("pixels = %g %g\n", px, py);
+    printf("mu1 = %g\n", mu1);
+    printf("m1 = %g\n", m1);
+    printf("nrE = %g\n", nrE);
+    printf("sourcePlaneRect = %.12g %.12g %.12g %.12g\n", xMin, xMax, yMin, yMax);
+    printf("prec(integ) = %g\n", prec);
+    printf("absPrec(roots) = %g\n", absPrec);
+    printf("relPrec(roots) = %g\n", relPrec);
+    printf("remPrec(roots) = %g\n", remPrec);
+    printf("rays = %d\n", rays);
+    printf("inside = %d\n", inside);
+    printf("outside = %d\n", outside);
+    printf("error = %d\n", error);
     printf("norm = %g\n", norm);
-    printf("minRays = %g\n", minRays);
-    printf("maxRays = %g\n", maxRays);
-    printf("time = %g\n", time);
+    printf("minRays = %d\n", minRays);
+    printf("maxRays = %d\n", maxRays);
+    printf("time = %g h\n", time);
 }
