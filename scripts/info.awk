@@ -19,7 +19,7 @@ BEGIN {
     nrE = $16;
     prec = $17;
     absPrec = $18;
-    relRrec = $19;
+    relPrec = $19;
     remPrec = $20;
     xMin = $21;
     xMax = $22;
