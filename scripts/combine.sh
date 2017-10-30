@@ -176,6 +176,7 @@ do
     then
         fr="$testImagesFile"
     elif [ -r "$myDomainsFile" ]
+    then
         fr="$myDomainsFile"
     else
         echo "No file $testImagesFile or $myDomainsFile found!"
