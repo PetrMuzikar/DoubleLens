@@ -78,6 +78,7 @@ do
     confFile="${inPrefix}/${outFileBaseName}-conf.sh"
     domainsFile="${inPrefix}/${outFileBaseName}-domains.dat"
     testImagesFile="${inPrefix}/${outFileBaseName}-images.dat"
+    myDomainsFile="${inPrefix}/${outFileBaseName}-myDomains.dat"
     plotConfFile="${inPrefix}/${outFileBaseName}-conf.plt"
     
     outFile="${d}/${outFileBaseName}-out.dat"
@@ -171,7 +172,16 @@ do
         tac "$f" | awk '/error=/{e = $3; next;} /outside=/{o = $3; next;} /inside=/{i = $3; next;} /rays=/{r = $3; exit;} END{ printf("%15d %15d %15d %15d\n", r, i, o, e);}' >> "$numRaysFile"
     done
     rr=$(awk '/^$|^#/{next;} {r += $1; e += $4;} END{print r-e;}' "$numRaysFile")
-    tail -n 3 "$testImagesFile" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
+    if [ -r "$testImagesFile" ]
+    then
+        fr="$testImagesFile"
+    elif [ -r "$myDomainsFile" ]
+        fr="$myDomainsFile"
+    else
+        echo "No file $testImagesFile or $myDomainsFile found!"
+        exit 1
+    fi
+    tail -n 3 "$fr" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
     echo "$rr " >> "$inWorkFile"
     # where to start a Sobol or Halton sequence, random seed
     echo "0" >> "$inWorkFile"
