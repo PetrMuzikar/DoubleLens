@@ -23,10 +23,10 @@ BEGIN {
 
 /#domain:/ {
     if (Sread == "") {
-        Ssum += $3; 
+        Ssum += $7; 
     }
     else {
-        S = $3;
+        S = $7;
         nDomain = int(S / Sread * n);
         m = int(nDomain / nMax);
         rem = int(nDomain % nMax);

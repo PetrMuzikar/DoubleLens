@@ -48,19 +48,19 @@ std::ostream& operator<<(std::ostream& os, const Domain& dom)
     {
         case RECTANGLE:
             os << 'r';
-            os << "  " << dom.area();
             os << "  " << dom.xLow;
             os << "  " << dom.xHigh;
             os << "  " << dom.yLow;
             os << "  " << dom.yHigh;
+            os << "  " << dom.area();
             break;
         case ANNULUS:
             os << 'a';
-            os << "  " << dom.area();
             os << "  " << dom.xC;
             os << "  " << dom.yC;
             os << "  " << dom.rLow;
             os << "  " << dom.rHigh;
+            os << "  " << dom.area();
             break;
         default:
             throw std::runtime_error("Domain::operator<<: bad type.");
@@ -79,11 +79,11 @@ std::istream& operator>>(std::istream& is, Domain& dom)
     {
         case 'a':
             dom.type = ANNULUS;
-            is >> dom.S >> dom.xC >> dom.yC >> dom.rLow >> dom.rHigh;
+            is >> dom.xC >> dom.yC >> dom.rLow >> dom.rHigh >> dom.S;
             break;
         case 'r':
             dom.type = RECTANGLE;
-            is >> dom.S >> dom.xLow >> dom.xHigh >> dom.yLow >> dom.yHigh;
+            is >> dom.xLow >> dom.xHigh >> dom.yLow >> dom.yHigh >> dom.S;
             break;
         default:
             throw std::runtime_error("Domain::operator>>: bad type.");
