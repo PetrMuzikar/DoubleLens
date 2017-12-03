@@ -216,11 +216,11 @@ std::istream& operator>>(std::istream& is, InputRays& ir)
     {
         case 'a':
             ir.type_ = ANNULUS;
-            is >> S >> ir.xC_ >> ir.yC_ >> ir.rLow_ >> ir.rHigh_;
+            is >> ir.xC_ >> ir.yC_ >> ir.rLow_ >> ir.rHigh_ >> S;
             break;
         case 'r':
             ir.type_ = RECTANGLE;
-            is >> S >> ir.xLow_ >> ir.xHigh_ >> ir.yLow_ >> ir.yHigh_;
+            is >> ir.xLow_ >> ir.xHigh_ >> ir.yLow_ >> ir.yHigh_ >> S;
             break;
         default:
             throw std::runtime_error("InputRays::operator>>: bad type.");
