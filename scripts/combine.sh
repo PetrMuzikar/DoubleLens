@@ -182,7 +182,7 @@ do
         echo "No file $testImagesFile or $myDomainsFile found!"
         exit 1
     fi
-    tail -n 3 "$fr" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r %.12e 0 1 0 %.12e ", s, s)}' > $inWorkFile 
+    tail -n 3 "$fr" | awk 'BEGIN{s=0} /^# Ssum=/{s = $3} END{printf("r 0 1 0 %.12e %.12e ", s, s)}' > $inWorkFile 
     echo "$rr " >> "$inWorkFile"
     # where to start a Sobol or Halton sequence, random seed
     echo "0" >> "$inWorkFile"

@@ -249,19 +249,19 @@ std::string InputRays::printInput() const
     {
     case RECTANGLE:
         ss << 'r' << " ";
-        ss << area() << " ";
         ss << xLow_ << " ";
         ss << xHigh_ << " ";
         ss << yLow_ << " ";
         ss << yHigh_;
+        ss << area() << " ";
         break;
     case ANNULUS:
         ss << 'a' << " ";
-        ss << area() << " ";
         ss << xC_ << " ";
         ss << yC_ << " ";
         ss << rLow_ << " ";
         ss << rHigh_;
+        ss << area() << " ";
         break;
     default:
         throw std::runtime_error("InputRays::printInput: bad type of domain.");
