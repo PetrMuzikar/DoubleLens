@@ -164,7 +164,7 @@ do
     fi
     
     echo "Combining results..."
-    echo "" > "$numRaysFile"
+    rm -f "$numRaysFile"
     files=("${d}/${outFileBaseName}"-+([[:digit:]])-out.dat)
     for f in ${files[@]}
     do

@@ -59,7 +59,7 @@ do
     domainsFile="${outFileBaseName}-domains.dat"
     myDomainsFile="${outFileBaseName}-myDomains.dat"
     #testFile="${outFileBaseName}-test.dat"
-    #testImagesFile="${outFileBaseName}-images.dat"
+    testImagesFile="${outFileBaseName}-images.dat"
     #dataFile="${outFileBaseName}-data.dat"
     plotMaps="maps.plt"
     plotFile="${outFileBaseName}-plot.plt"
@@ -123,6 +123,7 @@ do
     #cat ${testFile} | awk '/^#/{next;} {print $3, $4;}' | ${DOUBLE_LENS_FIND_DOMAINS} $radius $tol > "$testImagesFile"
 
     echo "Computing area of domains..."
+    rm -f "${testImagesFile}"
     $DOUBLE_LENS_AREA ${myDomainsFile} > w
     mv w ${myDomainsFile}
     rm -f w
