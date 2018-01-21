@@ -8,11 +8,11 @@ BEGIN {
     #todo = 0;
 
     type = 0;
-    S = 0;
     xLow = 0;
     xHigh = 0;
     yLow = 0;
     yHigh = 0;
+    S = 0;
     n = 0;
     start = 0;
     seed = 0;
@@ -44,11 +44,11 @@ BEGIN {
     if (random != 1) {
         # Sobol or Halton
         type = $2;
-        S = $3;
-        xLow = $4;
-        xHigh = $5;
-        yLow = $6;
-        yHigh = $7;
+        xLow = $3;
+        xHigh = $4;
+        yLow = $5;
+        yHigh = $5;
+        S = $7;
         n = $8;
         start = $9; #!!!
 
@@ -75,11 +75,11 @@ BEGIN {
     else {
         # random
         type = $2;
-        S = $3;
-        xLow = $4;
-        xHigh = $5;
-        yLow = $6;
-        yHigh = $7;
+        xLow = $3;
+        xHigh = $4;
+        yLow = $5;
+        yHigh = $6;
+        S = $7;
         n = $8;
         seed = $9;
 
