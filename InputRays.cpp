@@ -112,7 +112,9 @@ PointNum InputRays::getRay(LLInt k)
             return PointNum(x, y);
             break;
         case ANNULUS:
-            r = rLow_ + (rHigh_ - rLow_) * r1;
+            //r = rLow_ + (rHigh_ - rLow_) * r1; !!!
+            // see http://ridlow.wordpress.com
+            r = sqrt((SQR(rHigh_) - SQR(rLow_)) * r1 + SQR(rLow_));
             phi = 2.0 * PI * r2;
             return PointNum(xC_ + r*cos(phi), yC_ + r*sin(phi));
             break;
