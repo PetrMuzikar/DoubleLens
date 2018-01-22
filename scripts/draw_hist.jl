@@ -34,7 +34,7 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.eps", xrange=[], y
             sel = vec(mapslices(fSel, r, 2));
             r = r[sel, :];
         end 
-        sel = abs(r[:, end]) .<= maxi;
+        sel = abs.(r[:, end]) .<= maxi;
         r = r[sel, :];
         if length(xrange) == 2
             sel = xrange[1] .<= r[:, 1] .<= xrange[2];
