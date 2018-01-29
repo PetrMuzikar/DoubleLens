@@ -2,7 +2,7 @@
 
 reset
 
-cut = 1
+cut = 0.1
 drawEps = 1
 
 #nolap = system("which nolap.plt")
