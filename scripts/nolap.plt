@@ -49,7 +49,7 @@ set zrange [mini:maxi]
 sp input u 3:4:($$10 < 0 ? abs($$10) : 0) notitle
 
 set palette defined (0 "green", 1 "green")
-set palette maxcolors 1
+set palette maxcolors 2
 set zrange [mini:maxi]
 sp input u 3:4:(abs($$10) > cut ? maxi : maxi+1) notitle
 
@@ -61,7 +61,7 @@ set xtics
 set ytics
 set xlabel "{/Symbol b}_x"
 set ylabel "{/Symbol b}_y"
-set title "Relative difference between magnifications after the Laplace-correction for " . addtit
+set title "Relative difference between magnifications for " . addtit
 sp (maxi+1) notitle
 
 unset multiplot

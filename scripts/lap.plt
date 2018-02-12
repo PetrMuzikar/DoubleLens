@@ -49,7 +49,7 @@ set zrange [mini:maxi]
 sp input u 3:4:($$11 < 0 ? abs($$11) : 0) notitle
 
 set palette defined (0 "green", 1 "green")
-set palette maxcolors 1
+set palette maxcolors 2
 set zrange [mini:maxi]
 sp input u 3:4:(abs($$11) > cut ? maxi : maxi+1) notitle
 
