@@ -85,7 +85,7 @@ do
     plotFile="${d}/${outFileBaseName}-plot.plt"
     pixelsFile="${d}/${outFileBaseName}-pixels.dat"
     pixelsPlotFile="${d}/${outFileBaseName}-pixels.plt"
-    pixelsPlotEps="${d}/${outFileBaseName}-pixels.eps"
+    pixelsPlotImg="${d}/${outFileBaseName}-pixels.pdf"
     inWorkFile="${d}/${outFileBaseName}-inWork.dat"
     numRaysFile="${d}/${outFileBaseName}-numRays.dat"
     #testFileBaseName="test"
@@ -216,10 +216,10 @@ do
 
     if [ "${pixels}" != "" ]
     then
-        printf "unset key\n@EPS\n" > "$pixelsPlotFile"
-        echo "set out \"$(basename $pixelsPlotEps)\"" >> "$pixelsPlotFile"
+        printf "unset key\n@PDF\n" > "$pixelsPlotFile"
+        echo "set out \"$(basename $pixelsPlotImg)\"" >> "$pixelsPlotFile"
         echo "p \"$(basename ${pixelsFile})\" u 5:6:(column(-2)+1) lc variable" >> "$pixelsPlotFile"
-        printf "unset out\n@DEFAULT\nreplot\n" >> "$pixelsPlotFile"
+        printf "unset out\n@DEFAULT" >> "$pixelsPlotFile"
         echo "File ${pixelsPlotFile}:"
         cat "$pixelsPlotFile"
     fi
