@@ -2,13 +2,10 @@
 
 reset
 
-cut = 0.1
-drawEps = 1
+print "Processing " . ARG0 . "..."
 
-#nolap = system("which nolap.plt")
-call "nolap.plt" "$0"
+call "nolap.plt" "@ARG1"
 
-#lap = system("which lap.plt")
-call "lap.plt" "$0"
+call "lap.plt" "@ARG1"
 
-reset
+#reset
