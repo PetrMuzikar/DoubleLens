@@ -472,14 +472,14 @@ void SourcePlaneGrid::printData(std::ostream& os) const
             if (ifComputeMagnification())
             {
                 os << std::setw(w) << raysGnuplot;
-                os << std::setw(w1) << 0;
-                os << std::setw(w1) << 0;
+                os << std::setw(w1) << magGnuplot;
+                os << std::setw(w1) << magGnuplot;
                 os.precision(precHigh);
-                os << std::setw(wWidth) << 0;
-                os << std::setw(wWidth) << 0;
+                os << std::setw(wWidth) << magGnuplot;
+                os << std::setw(wWidth) << magGnuplot;
                 os.precision(precOld);
-                os << std::setw(w1) << 0;
-                os << std::setw(w1) << 0;
+                os << std::setw(w1) << relGnuplot;
+                os << std::setw(w1) << relGnuplot;
                 os << std::setw(w) << "#zero";
                 os << std::endl;
             }
