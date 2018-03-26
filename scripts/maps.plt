@@ -214,6 +214,7 @@ set size ratio -1
 
 set macro
 set pm3d map
+set pm3d corners2color c1
 set ticslevel 0
 unset key
 set xlabel "{/Symbol b}_x"
