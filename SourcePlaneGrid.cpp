@@ -325,8 +325,8 @@ void SourcePlaneGrid::printData(std::ostream& os) const
     Int prec = 11;
     Int precHigh = 13;
 
-    Int raysGnuplot = 1000000;
-    Num magGnuplot = 1e10;
+    Int raysGnuplot = 1;
+    Num magGnuplot = 1;
     Num relGnuplot = 1e-10; 
     const Num xAdd = betaX_(n-1) + diffGrid_.x();
     const Num yAdd = betaY_(n-1) + diffGrid_.y();
