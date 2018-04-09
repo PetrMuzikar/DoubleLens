@@ -1,25 +1,50 @@
 #!/bin/bash
 
-suff="${1:-pdf}"
+suff="pdf"
 
 for d in *-out
 do
     [ -d "$d" ] || continue
-    echo "Folder: $d"
-    dataFile="${d}/${d}.dat"
-    confFile="${d}/${d/%-out/-conf.plt}"
-    imgFile="${d}/${d}-rel.$suff"
-    if [ -f "$dataFile" ]
+
+    pushd "$d"
+
+    outFileBaseName="${d/%-out/}"
+    outFile="${outFileBaseName}-out.dat"
+    plotFile="${outFileBaseName}-plot.plt"
+    pixelsFile="${outFileBaseName}-pixels.plt"
+    confFile="${outFileBaseName}-conf.plt}"
+    imgFile="${outFileBaseName}-rel.$suff"
+    histFile="${outFileBaseName}-hist.$suff"
+
+    if [ -f "$outFile" ]
     then
-        echo "  Found $dataFile."
+        echo "  Found ${outFile}."
     else
-        echo "  No data file $dataFile!"
+        echo "  No data file ${outFile}!"
         continue
     fi
-    if [ "$dataFile" -nt "$imgFile" ]  || [ "$confFile" -nt "$imgFile" ]
+
+    if [ "$outFile" -nt "$imgFile" ]  || [ "$confFile" -nt "$imgFile" ]
     then
-        graph.sh "$d"
+        echo "Processing the file ${plotFile}." 
+        gnuplot "$plotFile"
+        if [ -r "${pixelsFile}" ]
+        then
+            echo "Processing the file ${pixelsFile}." 
+            gnuplot "$pixelsFile"
+        fi
     else
         echo "  File $imgFile is recent, skipping."
     fi
+
+    if [ "$outFile" -nt "$histFile" ]
+    then
+        echo "Generating a histogram of relative errors..."
+        draw_hist.jl "$outFile" 
+    else
+        echo "  File $histFile is recent, skipping."
+    fi
+
+    popd
+        
 done
