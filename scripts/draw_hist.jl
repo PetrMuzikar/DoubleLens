@@ -24,7 +24,7 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], y
         println("Reading the file $(f).")
         fig += 1;
         p = readdlm(f);
-        sel = p[:, 5] .>= 0;
+        sel = abs.(p[:, 10]) .< 1;
         if fRow == nothing
             r = p[sel, [3, 4, 10]];
         else
