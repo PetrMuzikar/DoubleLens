@@ -14,6 +14,8 @@ set out img2relname
 
 cut = 0.1
 
+c(x, y) = abs(x) >= y ? sgn(x)*(log10(abs(x)/y)+1) : 0
+
 set pm3d map
 set pm3d corners2color c1
 set size ratio -1
@@ -58,7 +60,7 @@ if (plotConf == 1) {
 
 load "colorbar.plt"
 
-sp input u 3:4:(sgn($11)*(log10(abs($11)/mini)+1)) notitle
+sp input u 3:4:(c($11,mini)) notitle
 
 unset out
 
