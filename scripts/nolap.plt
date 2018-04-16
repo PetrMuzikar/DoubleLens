@@ -2,6 +2,8 @@
 
 reset
 
+script = nolap
+
 print "Processing " . ARG0 . "..."
 
 if (ft eq "EPS") {

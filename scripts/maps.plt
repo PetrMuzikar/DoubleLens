@@ -2,6 +2,12 @@
 
 reset
 
+maps = 1
+nolap = 2
+lap = 3
+
+script = maps
+
 #show loadpath
 
 print "Processing " . ARG0 . "..."
