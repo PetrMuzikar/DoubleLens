@@ -2,9 +2,35 @@
 
 using PyPlot;
 
-function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
+function hist_bins(data, bins)
+    under = 0;
+    over = 0;
+    counts = zeros(length(bins)-1);
+    for x in data
+        if x <= bins[1]
+            under += 1;
+            continue;
+        elseif x > bins[end]
+            over += 1;
+            continue;
+        end
+        for k=2:length(bins)
+            if x <= bins[k]
+                counts[k-1] += 1;
+                break
+            end
+        end
+    end
+    [counts, [under, over]]
+end
+
+function draw_hist(files...; maxi=0.1, nbins=100, n=3, suff="-hist.pdf", suff2="-hist2.pdf", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
 
     bins = linspace(-maxi, maxi, nbins);
+
+    b = logspace(log10(maxi), log10(maxi)-n+1, n);
+    bins2 = vcat(-b, 0, reverse(b));
+    bins2_loc = -(n+1):(n+1);
 
     desc = "";
     if length(xrange) == 2
@@ -22,7 +48,6 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], y
     fig = 0
     for f in files
         println("Reading the file $(f).")
-        fig += 1;
         p = readdlm(f);
         sel = abs.(p[:, 10]) .< 1;
         if fRow == nothing
@@ -34,8 +59,6 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], y
             sel = vec(mapslices(fSel, r, 2));
             r = r[sel, :];
         end 
-        sel = abs.(r[:, end]) .<= maxi;
-        r = r[sel, :];
         if length(xrange) == 2
             sel = xrange[1] .<= r[:, 1] .<= xrange[2];
             r = r[sel, :];
@@ -44,9 +67,16 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], y
             sel = yrange[1] .<= r[:, 2] .<= yrange[2];
             r = r[sel, :];
         end
+
+        h = hist_bins(r[:,end], bins2);
+        counts = vcat(h[2][1], h[1], h[2][2]);
+
+        sel = abs.(r[:, end]) .<= maxi;
+        r = r[sel, :];
         mu = mean(r[:,end]);
         sigma = std(r[:,end]);
     
+        fig += 1;
         figure(fig);
         clf();
         plt[:hist](r[:,end], bins);
@@ -61,8 +91,18 @@ function draw_hist(files...; maxi=0.1, nbins=100, suff="-hist.pdf", xrange=[], y
         text(xx, yy, ss, verticalalignment="top");
         imgName = replace(f, r"-(out|diff).dat$", suff);
         savefig(imgName);
-    end
 
+        fig += 1;
+        figure(fig);
+        clf();
+        plt[:bar](bins2_loc[1:end-1], counts, width=1);
+        bins2_labels = vcat("< "*string(-maxi), bins2, "> "*string(maxi));
+        gca()[:set_xticklabels](bins2_labels);
+        xlabel(xlab);
+        ylabel(ylab);
+        imgName2 = replace(f, r"-(out|diff).dat$", suff2);
+        savefig(imgName2);
+    end
 end
 
 if length(ARGS) > 0
