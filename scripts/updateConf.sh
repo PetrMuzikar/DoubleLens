@@ -1,7 +1,15 @@
 #!/bin/bash
 
+pushd() {
+    command pushd "$@" > /dev/null
+}
+
+popd() {
+    command popd "$@" > /dev/null
+}
+
 inFiles="$(pwd)/../inFiles"
-echo $inFiles
+#echo $inFiles
 
 for d in d*
 do
@@ -11,11 +19,15 @@ do
         pushd "$b"
         for s in *
         do
+            [ -d "$s" ] || continue
             pushd "$s"
             bn="${s/-out/}"
-            confFile="${s}-conf.plt"
+            confFile="${bn}-conf.plt"
             inConfFile="${inFiles}/${bn}-in/${confFile}"
-            cp -u "$confFile" "$inConfFile"
+            if [ -f "$confFile" ] 
+            then
+                cp -uv "$confFile" "$inConfFile"
+            fi
             popd
         done
         popd
