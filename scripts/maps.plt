@@ -138,6 +138,15 @@ tab2name = basename . "-shooting-lap-cont.dat"
 tab3name = basename . "-analytic-cont.dat"
 addtit = sprintf("m_1 = %g, d = %s, {/Symbol b} = %s", m1, d, beta)
 
+if (system("awk '/##/{print $8; exit} {next}' " . dataname) <= 1e8) {
+    magmin = 0.95
+} else {
+    magmin = 0.99
+}
+
+stats "<awk '/#/{next} {print}' " . dataname using 8
+magmax = STATS_max
+
 set xrange [xmin:xmax]
 set yrange [ymin:ymax]
 unset surface
@@ -244,10 +253,15 @@ cbmin = magmin * (1 - epsi)
 cbmax = magmax * (1 + epsi)
 set cbrange [cbmin:cbmax]
 
-wid = magmax - magmin
-z1 = magmin + wid/4
-z2 = magmin + wid/2
-z3 = magmin + 3*wid/4
+#wid = magmax - magmin
+#z1 = magmin + wid/4
+#z2 = magmin + wid/2
+#z3 = magmin + 3*wid/4
+
+wid = cbmax - cbmin
+z1 = cbmin + wid/4
+z2 = cbmin + wid/2
+z3 = cbmin + 3*wid/4
 
 set palette defined ( \
     cbmin "yellow", \

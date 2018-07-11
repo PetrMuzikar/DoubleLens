@@ -14,7 +14,11 @@ if (ft eq "PDF") {
 }
 set out img2relname
 
-cut = 0.1
+if (system("awk '/##/{print $8; exit} {next}' " . dataname) <= 1e8) {
+    cut = 0.1
+} else {
+    cut = 0.01
+}
 
 c(x, y) = abs(x) >= y ? sgn(x)*(log10(abs(x)/y)+1) : 0
 
@@ -62,7 +66,7 @@ if (plotConf == 1) {
 
 load "colorbar.plt"
 
-sp input u 3:4:(c($11,mini)) notitle
+sp dataname u 3:4:(c($11,mini)) notitle
 
 unset out
 
