@@ -9,6 +9,8 @@ function inInterval(a, x, b) {
 }
 
 function rectRect(dom1, dom2) {
+    #print "Checking rectangle + rectangle...";
+
     x1L = dom1[3];
     x1H = dom1[4];
     y1L = dom1[5];
@@ -28,6 +30,8 @@ function rectRect(dom1, dom2) {
 }
 
 function rectAnn(dom1, dom2) {
+    #print "Checking rectangle + annulus...";
+
     x1L = dom1[3];
     x1H = dom1[4];
     y1L = dom1[5];
@@ -92,6 +96,35 @@ function rectAnn(dom1, dom2) {
     return 0;
 }
 
+function annAnn(dom1, dom2) {
+    #print "Checking annulus + annulus...";
+
+    x1C = dom1[3];
+    y1C = dom1[4];
+    r1L = dom1[5];
+    r1H = dom1[6];
+
+    x2C = dom2[3];
+    y2C = dom2[4];
+    r2L = dom2[5];
+    r2H = dom2[6];
+
+    r = dist(x1C, y1C, x2C, y2C);
+
+    if (r > r1H + r2H) {
+        return 0;
+    }
+    else if ((r2L > r1H) && (r < r2L - r1H)) {
+        return 0;
+    }
+    else if ((r1L > r2H) && (r < r1L - r2H)) {
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+
 BEGIN {
     n = 0;
     inter = 0;
@@ -99,6 +132,9 @@ BEGIN {
 
 /#domain:/ {
     d[n++] = $0;
+    if (n > 30) {
+        exit 1;
+    }
     next;
 }
 
@@ -118,7 +154,7 @@ END {
                 }
                 else {
                     print "Bad domain!";
-                    exit;
+                    exit 1;
                 }
                 if (inter) {
                     print "Intersection:";
@@ -140,13 +176,11 @@ END {
                     inter = rectAnn(dom2, dom1);
                 }
                 else if (dom2[2] == "a") {
-                    #inter = annAnn(dom1, dom2);
-                    print "Not implemented!"
-                    exit;
+                    inter = annAnn(dom1, dom2);
                 }
                 else {
                     print "Bad domain!";
-                    exit;
+                    exit 1;
                 }
                 if (inter) {
                     print "Intersection:";
@@ -162,8 +196,8 @@ END {
             }
         }
         else {
-            echo "Error!";
-            exit;
+            print "Error!";
+            exit 1;
         }
     }
 }

@@ -8,7 +8,7 @@ do
     echo "$inFile"
     if [ -r "$inFile" ]
     then 
-        intersection.awk "$inFile"
+        intersection.awk "$inFile" || (popd > /dev/null; break)
     fi
     popd > /dev/null
 done
