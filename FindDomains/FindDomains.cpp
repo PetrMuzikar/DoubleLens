@@ -133,7 +133,6 @@ void domain(const CNumList& data, Domain& dom, const Num pad = 0.05)
     Num r;
     Num rLow = abs(z - zC);
     Num rHigh = rLow;
-    Num dr2;
 
     for (CNumList::const_iterator it = data.begin(); it != data.end(); it++)
     {
@@ -149,12 +148,10 @@ void domain(const CNumList& data, Domain& dom, const Num pad = 0.05)
         }
     }
 
-    r = (rLow + rHigh) / 2.0;
-    dr2 = (rHigh - rLow) / 2.0;
-    rLow = r - dr2 * (1.0 + pad);
-    rHigh = r + dr2 * (1.0 + pad);
+    rLow = rLow * (1.0 - pad);
+    rHigh = rHigh * (1.0 + pad);
 
-    if ((rLow > 0.0) && (dr2 / r < 0.25))
+    if ((rLow > 0.0) && (rLow / rHigh > 0.1))
     {
         // annulus
         dom.type = ANNULUS;
