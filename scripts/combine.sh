@@ -2,6 +2,7 @@
 
 shopt -s nullglob
 shopt -s extglob
+shopt -s globstar
 
 echo "DOUBLE_LENS=$DOUBLE_LENS"
 if [ ! -d "$DOUBLE_LENS" ]
@@ -72,7 +73,14 @@ for d in "$@"
 do
     outFileBaseName="${d/%-out/}"
     
-    inPrefix="${DOUBLE_LENS_WORK_DIR}/inFiles/${outFileBaseName}-in"
+    a=("${DOUBLE_LENS_WORK_DIR}"/inFiles/**/"${outFileBaseName}-in/")
+    if [ "${#a[@]}" -eq "0" ] || [ ! -d "${a[0]}" ]
+    then
+        echo "No input directory found!"
+        exit 1
+    else
+        inPrefix="${a[0]}"
+    fi
     
     inFile="${inPrefix}/${outFileBaseName}-in.dat"
     confFile="${inPrefix}/${outFileBaseName}-conf.sh"

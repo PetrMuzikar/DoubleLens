@@ -2,6 +2,7 @@
 
 shopt -s nullglob
 shopt -s extglob
+shopt -s globstar
 
 if [ "$#" -eq "0" ]
 then
@@ -38,6 +39,11 @@ case "$1" in
         kMax=20
         shift
         ;;
+    generic)
+        SELECT="generic"
+        kMax=4
+        shift
+        ;;
     *)
         SELECT="generic"
         kMax=4
@@ -46,7 +52,15 @@ esac
 for outFileBaseName in "$@"
 do
     outDir="${DOUBLE_LENS_WORK_DIR}/outFiles/${outFileBaseName}-out"
-    inDir="${DOUBLE_LENS_WORK_DIR}/inFiles/${outFileBaseName}-in"
+
+    arr=("${DOUBLE_LENS_WORK_DIR}"/inFiles/**/"${outFileBaseName}-in/")
+    if [ "${#arr[@]}" -eq "0" ] || [ ! -d "${arr[0]}" ]
+    then
+        echo "No input directory found!"
+        exit 1
+    else
+        inDir="${arr[0]}"
+    fi
     
     if [ -d "$outDir" ]
     then
