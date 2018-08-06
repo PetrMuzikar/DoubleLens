@@ -1,12 +1,9 @@
 #!/bin/bash
 
-#chTerm() {
-#    cat "$1" | sed 's/set term wxt/set term qt/g' | gnuplot
-#}
-
 for d in "$@"
 do
-    outFileBaseName="${d/%-out/}"
+    dir=$(basename "${d}")
+    outFileBaseName="${dir/%-out/}"
     outFile="${outFileBaseName}-out.dat"
     plotFile="${outFileBaseName}-plot.plt"
     pixelsFile="${outFileBaseName}-pixels.plt"
