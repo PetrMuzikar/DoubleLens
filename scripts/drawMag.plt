@@ -10,7 +10,10 @@ tit = ARG4
 
 set multiplot
 
+set pm3d map
 set pm3d corners2color mean
+set size ratio -1
+set size 1.2, 1.2
 set palette defined (0 "blue", 0.5 "gray", 1 "red")
 set cbrange [mini:maxi]
 set colorbox
@@ -18,6 +21,7 @@ set xtics
 set ytics
 set xlabel "{/Symbol b}_x"
 set ylabel "{/Symbol b}_y"
+unset key
 set title tit
 @draw
 
@@ -26,7 +30,6 @@ unset xtics
 unset ytics
 unset xlabel
 unset ylabel
-unset key
 set title ""
 set autoscale cb
 

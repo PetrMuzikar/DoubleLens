@@ -214,8 +214,6 @@ if (sub == 1 || div == 1) {
     set autoscale cb
 }
 
-set size ratio -1
-
 #set macro
 #set pm3d map
 #set pm3d corners2color c1
