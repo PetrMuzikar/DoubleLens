@@ -16,7 +16,8 @@ set multiplot
 set pm3d map
 set pm3d corners2color c1
 set size ratio -1
-set palette defined (0 "blue", 0.5 "gray", 1 "red")
+#set palette defined (0 "blue", 0.5 "gray", 1 "red")
+load "jet.pal"
 set autoscale z
 set cbrange [mini:maxi]
 set colorbox
