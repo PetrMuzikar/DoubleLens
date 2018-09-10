@@ -131,18 +131,23 @@ if (div == 1) {
 imgrelname = basename . "-rel" . suff
 img2relname = basename . "-rel-lap" . suff
 tabname = basename . "-shooting-cont.dat"
+statname = basename . "-stats.dat"
 #tab2name = basename . "-shooting-lap-cont.dat"
 #tab3name = basename . "-analytic-cont.dat"
 addtit = sprintf("m_1 = %g, d = %s, {/Symbol b} = %s", m1, d, beta)
 
-if (system("awk '/##/{print $8; exit} {next}' " . dataname) <= 1e8) {
-    magmin = 0.95
-} else {
-    magmin = 0.99
+set print statname
+stats "<awk '/#/{next} {print}' " . dataname using 6:8
+unset print
+magmin = 1
+if (STATS_min_x < 1) {
+    if (system("awk '/##/{print $8; exit} {next}' " . dataname) <= 1e8) {
+        magmin = 0.95
+    } else {
+        magmin = 0.99
+    }
 }
-
-stats "<awk '/#/{next} {print}' " . dataname using 8
-magmax = STATS_max
+magmax = STATS_max_y
 
 set xrange [xmin:xmax]
 set yrange [ymin:ymax]

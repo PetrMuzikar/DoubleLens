@@ -37,13 +37,13 @@ unset ylabel
 set title ""
 
 #set pm3d corners2color max
-set palette defined (0 "green", 1 "green")
+set palette defined (0 "pink", 1 "pink")
 set zrange [maxi:upper]
 set cbrange [maxi:upper]
 @draw
 
 #set pm3d corners2color min
-set palette defined (0 "yellow", 1 "yellow")
+set palette defined (0 "purple", 1 "purple")
 set zrange [under:mini]
 set cbrange [under:mini]
 @draw
