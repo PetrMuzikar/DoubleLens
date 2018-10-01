@@ -1,6 +1,9 @@
 #!/usr/bin/env julia
 
 using PyPlot;
+using Statistics;
+using DelimitedFiles;
+using Printf;
 
 function hist_bins(data, bins)
     under = 0;
@@ -24,11 +27,12 @@ function hist_bins(data, bins)
     [counts, [under, over]]
 end
 
-function draw_hist(files...; maxi=0.1, nbins=100, n=3, suff="-hist.pdf", suff2="-hist2.pdf", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
+function draw_hist(files...; maxi=0.1, nbins=100, n=4, suff="-hist.pdf", suff2="-hist2.pdf", xrange=[], yrange=[], fRow=nothing, fSel=nothing, xlab="relative differences", ylab="counts")
 
-    bins = linspace(-maxi, maxi, nbins);
+    dx = 2.0 * maxi / nbins;
+    bins = range(-maxi, stop=maxi, step=dx)
 
-    b = logspace(log10(maxi), log10(maxi)-n+1, n);
+    b = 10 .^ range(log10(maxi), stop=log10(maxi)-n+1, length=n);
     bins2 = vcat(-b, 0, reverse(b));
     bins2_loc = -(n+1):(n+1);
 
@@ -48,7 +52,7 @@ function draw_hist(files...; maxi=0.1, nbins=100, n=3, suff="-hist.pdf", suff2="
     fig = 0
     for f in files
         println("Reading the file $(f).")
-        p = readdlm(f);
+        p = readdlm(f, comments=true);
         sel = abs.(p[:, 10]) .< 1;
         if fRow == nothing
             r = p[sel, [3, 4, 10]];
@@ -89,7 +93,7 @@ function draw_hist(files...; maxi=0.1, nbins=100, n=3, suff="-hist.pdf", suff2="
         yy = yl[1] + (yl[2] - yl[1]) * 0.98;
         ss = @sprintf("mu = %.3e\nsigma = %.3e\n%s", mu, sigma, desc);
         text(xx, yy, ss, verticalalignment="top");
-        imgName = replace(f, r"-(out|diff).dat$", suff);
+        imgName = replace(f, r"-(out|diff).dat$" => suff);
         savefig(imgName);
 
         fig += 1;
@@ -97,10 +101,12 @@ function draw_hist(files...; maxi=0.1, nbins=100, n=3, suff="-hist.pdf", suff2="
         clf();
         plt[:bar](bins2_loc[1:end-1], counts, width=1);
         bins2_labels = vcat("< "*string(-maxi), bins2, "> "*string(maxi));
+        gca()[:set_xlim](-(n+1), n+1);
+        gca()[:set_xticks](bins2_loc);
         gca()[:set_xticklabels](bins2_labels);
         xlabel(xlab);
         ylabel(ylab);
-        imgName2 = replace(f, r"-(out|diff).dat$", suff2);
+        imgName2 = replace(f, r"-(out|diff).dat$" => suff2);
         savefig(imgName2);
     end
 end
