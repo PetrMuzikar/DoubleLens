@@ -14,7 +14,9 @@ if (ft eq "PDF") {
 }
 set out imgrelname
 
-if (system("awk '/##/{print $8; exit} {next}' " . dataname) <= 1e8) {
+st = '/##/{printf("%.12e\n", $8); exit} {next}'
+st = "awk '" . st . "' " . dataname
+if (system(st) <= 1e8) {
     cut = 0.1
 } else {
     cut = 0.01
