@@ -94,16 +94,11 @@ do
     
     random=${random:-0}
     integ=${integ:-0}
-    
     radius=${radius:-1}
     rays=${rays:-100000000}
     raysGroup=${raysGroup:-50000000}
     tol=${tol:-"0.1"}
     images=${images:-10000}
-    #absPrec=${absPrec:-1e-9}
-    #relPrec=${relPrec:-1e-9}
-    #remPrec=${remPrec:-1e-5}
-    
     clean=${clean:-1}
 
     echo "outFileBaseName: ${outFileBaseName}"
@@ -114,10 +109,6 @@ do
     echo "raysGroup: ${raysGroup}"
     echo "tol: ${tol}"
     echo "images: ${images}"
-    #echo "Polynomial solver:"
-    #echo "  absPrec: ${absPrec}"
-    #echo "  relPrec: ${relPrec}"
-    #echo "  remPrec: ${remPrec}"
     echo "pixels: ${pixels}"
     echo "clean: ${clean}"
     
