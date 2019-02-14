@@ -84,24 +84,48 @@ BEGIN {
 }
 
 END {
-    printf("file = %s\n", ARGV[1]);
-    printf("d = %g\n", d);
-    printf("beta = %g\n", beta);
-    printf("pixels = %g %g\n", px, py);
-    printf("mu1 = %g\n", mu1);
-    printf("m1 = %g\n", m1);
-    printf("nrE = %g\n", nrE);
-    printf("sourcePlaneRect = %.12g %.12g %.12g %.12g\n", xMin, xMax, yMin, yMax);
-    printf("prec(integ) = %g\n", prec);
-    printf("absPrec(roots) = %g\n", absPrec);
-    printf("relPrec(roots) = %g\n", relPrec);
-    printf("remPrec(roots) = %g\n", remPrec);
-    printf("rays = %d\n", rays);
-    printf("inside = %d\n", inside);
-    printf("outside = %d\n", outside);
-    printf("error = %d\n", error);
-    printf("norm = %g\n", norm);
-    printf("minRays = %d\n", minRays);
-    printf("maxRays = %d\n", maxRays);
-    printf("time = %g h\n", time);
+    if (csv == 1) {
+        printf("%s;", ARGV[1]);
+        printf("%g;", d);
+        printf("%g;", beta);
+        printf("%g;%g;", px, py);
+        printf("%g;", mu1);
+        printf("%g;", m1);
+        printf("%g;", nrE);
+        printf("%.12g;%.12g;%.12g;%.12g;", xMin, xMax, yMin, yMax);
+        printf("%g;", prec);
+        printf("%g;", absPrec);
+        printf("%g;", relPrec);
+        printf("%g;", remPrec);
+        printf("%d;", rays);
+        printf("%d;", inside);
+        printf("%d;", outside);
+        printf("%d;", error);
+        printf("%g;", norm);
+        printf("%d;", minRays);
+        printf("%d;", maxRays);
+        printf("%g", time);
+    }
+    else {
+        printf("file = %s\n", ARGV[1]);
+        printf("d = %g\n", d);
+        printf("beta = %g\n", beta);
+        printf("pixels = %g %g\n", px, py);
+        printf("mu1 = %g\n", mu1);
+        printf("m1 = %g\n", m1);
+        printf("nrE = %g\n", nrE);
+        printf("sourcePlaneRect = %.12g %.12g %.12g %.12g\n", xMin, xMax, yMin, yMax);
+        printf("prec(integ) = %g\n", prec);
+        printf("absPrec(roots) = %g\n", absPrec);
+        printf("relPrec(roots) = %g\n", relPrec);
+        printf("remPrec(roots) = %g\n", remPrec);
+        printf("rays = %d\n", rays);
+        printf("inside = %d\n", inside);
+        printf("outside = %d\n", outside);
+        printf("error = %d\n", error);
+        printf("norm = %g\n", norm);
+        printf("minRays = %d\n", minRays);
+        printf("maxRays = %d\n", maxRays);
+        printf("time = %g h\n", time);
+    }
 }
